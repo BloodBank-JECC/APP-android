@@ -19,7 +19,6 @@ export default function Header() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    padding: 30,
     alignItems: "center",
   },
   welcomeText: {
