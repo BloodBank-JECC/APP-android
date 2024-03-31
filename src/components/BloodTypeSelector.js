@@ -12,41 +12,46 @@ export default function BloodTypeSlector() {
   const bloodTypes = ["O+", "A+", "B+", "AB+", "O-", "A-", "B-", "AB-"];
 
   return (
-    <FlatList
-      data={bloodTypes}
-      numColumns={4}
-      ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-      keyExtractor={(item) => item}
-      renderItem={({ item }) => {
-        return (
-          <TouchableOpacity
-            onPress={() => {
-              setType(item);
-            }}
-          >
-            <View
-              style={{
-                ...styles.optionConatiner,
-                backgroundColor: type === item ? "#e75f62" : "#fcfcfc",
+    <View style={styles.container}>
+      <FlatList
+        data={bloodTypes}
+        numColumns={4}
+        ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+        keyExtractor={(item) => item}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                setType(item);
               }}
             >
-              <Text
+              <View
                 style={{
-                  ...styles.text,
-                  color: type === item ? "white" : "black",
+                  ...styles.optionConatiner,
+                  backgroundColor: type === item ? "#e75f62" : "#fcfcfc",
                 }}
               >
-                {item}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        );
-      }}
-    />
+                <Text
+                  style={{
+                    ...styles.text,
+                    color: type === item ? "white" : "black",
+                  }}
+                >
+                  {item}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginVertical: 10,
+  },
   optionConatiner: {
     padding: 10,
     margin: 10,

@@ -2,6 +2,7 @@ import { StyleSheet, View, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./src/screens/Home";
+import FindDonor from "./src/screens/FindDonor";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,11 @@ export default function App() {
             name="Home"
             component={Home}
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="FindDonor"
+            component={FindDonor}
+            options={{ title: "Pick your blood group" }}
           />
         </Stack.Navigator>
       </View>
