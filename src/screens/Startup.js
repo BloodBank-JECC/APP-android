@@ -15,7 +15,7 @@ export default function Startup() {
       />
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("Login")}
         style={{
           width: "100%",
           justifyContent: "center",
@@ -23,7 +23,7 @@ export default function Startup() {
         }}
       >
         <View style={styles.buttonConatiner}>
-          <Text style={styles.text}>Login</Text>
+          <Text style={styles.text}>Let's Go</Text>
         </View>
       </TouchableOpacity>
     </View>
