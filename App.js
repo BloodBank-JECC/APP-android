@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./src/screens/Home";
 import FindDonor from "./src/screens/FindDonor";
+import Startup from "./src/screens/Startup";
 
 const Stack = createNativeStackNavigator();
 
@@ -11,7 +12,12 @@ export default function App() {
     <NavigationContainer>
       <View style={styles.container}>
         <StatusBar backgroundColor={"#fff"} barStyle="dark-content" />
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="Startup">
+          <Stack.Screen
+            name="Startup"
+            component={Startup}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="Home"
             component={Home}
