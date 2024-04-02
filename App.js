@@ -6,6 +6,7 @@ import FindDonor from "./src/screens/FindDonor";
 import Startup from "./src/screens/Startup";
 import Login from "./src/screens/Login";
 import SignUp from "./src/screens/SignUp";
+import BloodType from "./src/screens/BloodType";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,11 @@ export default function App() {
           <Stack.Screen
             name="SignUp"
             component={SignUp}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="BloodType"
+            component={BloodType}
             options={{ headerShown: false }}
           />
           <Stack.Screen

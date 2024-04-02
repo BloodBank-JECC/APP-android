@@ -10,12 +10,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { RadioButton } from "react-native-paper";
+import BloodType from "./BloodType";
 
 export default function SignUp() {
   const navigation = useNavigation();
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const [confirmPassword, setConfrimPassword] = useState(null); 
+  const [confirmPassword, setConfrimPassword] = useState(null);
   const [remember, setRemember] = useState(false);
 
   return (
@@ -58,9 +59,14 @@ export default function SignUp() {
           />
         </View>
 
-        <View style={styles.buttonConatiner}>
-          <Text style={styles.text}>Sign Up</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("BloodType")}
+          style={{ width: "100%" }}
+        >
+          <View style={styles.buttonConatiner}>
+            <Text style={styles.text}>Sign Up</Text>
+          </View>
+        </TouchableOpacity>
 
         <View style={{ flexDirection: "row", marginTop: 20 }}>
           <Text>Already have an account? </Text>
