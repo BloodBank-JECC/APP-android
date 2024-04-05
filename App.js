@@ -7,6 +7,7 @@ import Startup from "./src/screens/Startup";
 import Login from "./src/screens/Login";
 import SignUp from "./src/screens/SignUp";
 import BloodType from "./src/screens/BloodType";
+import OtpVerfiy from "./src/screens/OtpVerfiy";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,11 @@ export default function App() {
           <Stack.Screen
             name="SignUp"
             component={SignUp}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="OtpVerfiy"
+            component={OtpVerfiy}
             options={{ headerShown: false }}
           />
           <Stack.Screen

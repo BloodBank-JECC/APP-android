@@ -1,4 +1,4 @@
-import { Fontisto, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import { useState } from "react";
 import {
@@ -9,15 +9,11 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { RadioButton } from "react-native-paper";
-import BloodType from "./BloodType";
 
 export default function SignUp() {
   const navigation = useNavigation();
   const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [confirmPassword, setConfrimPassword] = useState(null);
-  const [remember, setRemember] = useState(false);
+  const [phone, setPhone] = useState(null);
 
   return (
     <View style={styles.container}>
@@ -30,41 +26,31 @@ export default function SignUp() {
         <Text style={styles.subTitle}>Create an account</Text>
 
         <View style={styles.textInputConatiner}>
-          <Fontisto name="email" size={25} />
+          <Feather name="mail" size={25} />
           <TextInput
             value={email}
-            placeholder="Email "
+            placeholder="Email"
             onChangeText={setEmail}
             style={styles.textInput}
           />
         </View>
 
         <View style={styles.textInputConatiner}>
-          <Feather name="lock" size={25} />
+          <Feather name="phone" size={25} />
           <TextInput
-            value={password}
-            placeholder="Password"
-            onChangeText={setPassword}
-            style={styles.textInput}
-          />
-        </View>
-
-        <View style={styles.textInputConatiner}>
-          <Feather name="lock" size={25} />
-          <TextInput
-            value={confirmPassword}
-            placeholder="Confirm password"
-            onChangeText={setConfrimPassword}
+            value={phone}
+            placeholder="Phone"
+            onChangeText={setPhone}
             style={styles.textInput}
           />
         </View>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("BloodType")}
+          onPress={() => navigation.navigate("OtpVerfiy")}
           style={{ width: "100%" }}
         >
           <View style={styles.buttonConatiner}>
-            <Text style={styles.text}>Sign Up</Text>
+            <Text style={styles.text}>Continue</Text>
           </View>
         </TouchableOpacity>
 
