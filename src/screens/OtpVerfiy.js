@@ -2,12 +2,15 @@ import {
   View,
   Text,
   TextInput,
+  TouchableOpacity,
   StyleSheet,
 } from "react-native";
 import { useRef, useState } from "react";
 import LottieView from "lottie-react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function OtpVerfiy() {
+  const navigation = useNavigation();
   const inputRefs = useRef([]);
   const [otp, setOtp] = useState(["", "", "", ""]);
 
@@ -75,9 +78,15 @@ export default function OtpVerfiy() {
         <Text>Dont recieve otp? </Text>
         <Text style={{ fontWeight: "600" }}>RESEND OTP</Text>
       </View>
-      <View style={styles.buttonConatiner}>
-        <Text style={styles.buttonText}>Verify</Text>
-      </View>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate("FillUserDetails")}
+        style={{ width: "100%", alignItems: 'center' }}
+      >
+        <View style={styles.buttonConatiner}>
+          <Text style={styles.buttonText}>Verify</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
