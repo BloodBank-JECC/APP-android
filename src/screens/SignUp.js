@@ -9,11 +9,44 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import ShowToast from "../components/Toast";
 
 export default function SignUp() {
   const navigation = useNavigation();
-  const [email, setEmail] = useState(null);
-  const [phone, setPhone] = useState(null);
+  const [userInfo, setUserInfo] = useState({
+    email: null,
+    phone: null,
+  });
+
+  const verifyData = () => {
+    if (!userInfo.email && !userInfo.phone) return false;
+
+    // Verify email (jecc.ac.in only approved for now)
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@jecc\.ac\.in$/;
+    const isEmailValid = emailPattern.test(userInfo.email);
+    if (!isEmailValid) {
+      ShowToast("error",
+        "Please use email with the domain jecc.ac.in"
+      );
+      return false;
+    }
+
+    // Verify phone
+    const phonePattern = /^(?:\+?91)?[0-9]{10}$/;
+    const isPhoneValid = phonePattern.test(userInfo.phone);
+    if (!isPhoneValid) {
+      ShowToast("error",
+        "Please enter a valid 10-digit phone number."
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (!verifyData()) return;
+    navigation.navigate("OtpVerfiy", { userInfo });
+  };
 
   return (
     <View style={styles.container}>
@@ -28,9 +61,9 @@ export default function SignUp() {
         <View style={styles.textInputConatiner}>
           <Feather name="mail" size={25} />
           <TextInput
-            value={email}
+            value={userInfo.email}
             placeholder="Email"
-            onChangeText={setEmail}
+            onChangeText={(email) => setUserInfo({ ...userInfo, email: email })}
             style={styles.textInput}
           />
         </View>
@@ -38,17 +71,14 @@ export default function SignUp() {
         <View style={styles.textInputConatiner}>
           <Feather name="phone" size={25} />
           <TextInput
-            value={phone}
+            value={userInfo.phone}
             placeholder="Phone"
-            onChangeText={setPhone}
+            onChangeText={(phone) => setUserInfo({ ...userInfo, phone: phone })}
             style={styles.textInput}
           />
         </View>
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("OtpVerfiy")}
-          style={{ width: "100%" }}
-        >
+        <TouchableOpacity onPress={handleSubmit} style={{ width: "100%" }}>
           <View style={styles.buttonConatiner}>
             <Text style={styles.text}>Continue</Text>
           </View>
