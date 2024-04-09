@@ -3,6 +3,7 @@
     "name": "BloodBank",
     "slug": "BloodBank",
     "version": "1.0.0",
+    "plugins": ["@react-native-firebase/app", "@react-native-firebase/auth"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,6 +19,7 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
