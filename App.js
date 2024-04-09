@@ -1,6 +1,7 @@
 import { StyleSheet, View, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Toast from "react-native-toast-message";
 import Home from "./src/screens/Home";
 import FindDonor from "./src/screens/FindDonor";
 import Startup from "./src/screens/Startup";
@@ -65,6 +66,7 @@ export default function App() {
             options={{ title: "Pick your blood group" }}
           />
         </Stack.Navigator>
+        <Toast />
       </View>
     </NavigationContainer>
   );
