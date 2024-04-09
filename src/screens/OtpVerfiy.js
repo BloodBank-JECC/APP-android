@@ -3,28 +3,68 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
   StyleSheet,
 } from "react-native";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/native";
+import auth from "@react-native-firebase/auth";
+import ShowToast from "../components/Toast";
 
-export default function OtpVerfiy() {
+export default function OtpVerfiy({ route }) {
   const navigation = useNavigation();
+  const { userInfo } = route.params;
   const inputRefs = useRef([]);
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [code, setCode] = useState(null);
+  const [confirm, setConfirm] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    signInwithPhoneNumber();
+  }, []);
+
+  const signInwithPhoneNumber = async () => {
+    try {
+      await auth()
+        .signInWithPhoneNumber(`+91${userInfo.phone}`)
+        .then((confirmation) => {
+          setConfirm(confirmation);
+          ShowToast("success", "OTP sent successfully.");
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
+    } catch (e) {
+      console.error(e.message);
+      ShowToast("error", "Failed to send otp.");
+    }
+  };
+
+  const confirmCode = async () => {
+    try {
+      setLoading(true);
+      await confirm.confirm(code);
+      navigation.replace("FillUserDetails");
+    } catch (error) {
+      ShowToast("error", "Invalid code.");
+      console.log(error);
+    }
+  };
 
   const handleOnChange = (text, index) => {
     const newOtp = [...otp];
     newOtp[index] = text;
     setOtp(newOtp);
 
-    if (text.length === 1 && index < 3) {
+    if (text.length === 1 && index < 5) {
       inputRefs.current[index + 1].focus();
     }
 
     const completeOtp = newOtp.join("");
-    console.log("Complete OTP:", completeOtp);
+    console.log("OTP: " + completeOtp);
+    setCode(completeOtp);
   };
 
   const handleOnKeyPress = (e, index) => {
@@ -53,10 +93,10 @@ export default function OtpVerfiy() {
       <Text style={styles.subTitle}>
         Otp has been sent to your mobile number
       </Text>
-      <Text style={styles.subTitle}>******7898</Text>
+      <Text style={styles.subTitle}>******{userInfo.phone.slice(-4)}</Text>
 
       <View style={styles.otpInputContainer}>
-        {[0, 1, 2, 3].map((index) => (
+        {[0, 1, 2, 3, 4, 5].map((index) => (
           <TextInput
             key={index}
             style={{
@@ -79,14 +119,22 @@ export default function OtpVerfiy() {
         <Text style={{ fontWeight: "600" }}>RESEND OTP</Text>
       </View>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate("FillUserDetails")}
-        style={{ width: "100%", alignItems: 'center' }}
-      >
-        <View style={styles.buttonConatiner}>
-          <Text style={styles.buttonText}>Verify</Text>
-        </View>
-      </TouchableOpacity>
+      {loading ? (
+        <ActivityIndicator
+          color="#e75f62"
+          size="large"
+          style={{ marginTop: 50 }}
+        />
+      ) : (
+        <TouchableOpacity
+          onPress={confirmCode}
+          style={{ width: "100%", alignItems: "center" }}
+        >
+          <View style={styles.buttonConatiner}>
+            <Text style={styles.buttonText}>Verify</Text>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -105,11 +153,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "600",
   },
-  subTitle: {},
   otpInputContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "80%",
+    width: "95%",
     marginVertical: 40,
   },
   input: {
