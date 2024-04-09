@@ -14,8 +14,10 @@ import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
+import { useNavigation } from "@react-navigation/core";
 
 export default function FillUserDetails() {
+  const navigation = useNavigation();
   const [name, setName] = useState(null);
   const [showDate, setShowDate] = useState(false);
   const [date, setDate] = useState(dayjs());
@@ -49,7 +51,7 @@ export default function FillUserDetails() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Fill your info</Text>
+      <Text style={styles.title}>Complete your details</Text>
       <Image
         source={require("../../assets/nouser.png")}
         style={styles.profileImg}
@@ -149,7 +151,7 @@ export default function FillUserDetails() {
       </View>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("OtpVerfiy")}
+        onPress={() => navigation.navigate("BloodType")}
         style={{ width: "100%", alignItems: "center" }}
       >
         <View style={styles.buttonConatiner}>
@@ -168,12 +170,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "600",
-    width: "100%",
-    alignItems: "flex-start",
     marginVertical: 40,
-    marginLeft: 20,
   },
   lottie: {
     width: "100%",

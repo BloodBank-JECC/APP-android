@@ -3,8 +3,10 @@ import { useState } from "react";
 import { RadioButton } from "react-native-paper";
 import LottieView from "lottie-react-native";
 import BloodTypeSlector from "../components/BloodTypeSelector";
+import { useNavigation } from "@react-navigation/core";
 
 export default function BloodType() {
+  const navigation = useNavigation();
   const [checked, setChecked] = useState("first");
 
   return (
@@ -44,11 +46,11 @@ export default function BloodType() {
       </View>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("BloodType")}
+        onPress={() => navigation.navigate("SetPassword")}
         style={{ width: "100%" }}
       >
         <View style={styles.buttonConatiner}>
-          <Text style={styles.saveButtonText}>Save</Text>
+          <Text style={styles.saveButtonText}>Continue</Text>
         </View>
       </TouchableOpacity>
     </View>
