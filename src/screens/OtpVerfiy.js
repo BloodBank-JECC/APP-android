@@ -14,7 +14,7 @@ import ShowToast from "../components/Toast";
 
 export default function OtpVerfiy({ route }) {
   const navigation = useNavigation();
-  const { userInfo } = route.params;
+  const { signUpData } = route.params;
   const inputRefs = useRef([]);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [code, setCode] = useState(null);
@@ -22,13 +22,14 @@ export default function OtpVerfiy({ route }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    signInwithPhoneNumber();
+    //signInwithPhoneNumber();
+    navigation.replace("FillUserDetails", {  signUpData });
   }, []);
 
   const signInwithPhoneNumber = async () => {
     try {
       await auth()
-        .signInWithPhoneNumber(`+91${userInfo.phone}`)
+        .signInWithPhoneNumber(`+91${signUpData.phone}`)
         .then((confirmation) => {
           setConfirm(confirmation);
           ShowToast("success", "OTP sent successfully.");
@@ -49,7 +50,7 @@ export default function OtpVerfiy({ route }) {
       navigation.replace("FillUserDetails");
     } catch (error) {
       ShowToast("error", "Invalid code.");
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -63,7 +64,6 @@ export default function OtpVerfiy({ route }) {
     }
 
     const completeOtp = newOtp.join("");
-    console.log("OTP: " + completeOtp);
     setCode(completeOtp);
   };
 
@@ -93,7 +93,7 @@ export default function OtpVerfiy({ route }) {
       <Text style={styles.subTitle}>
         Otp has been sent to your mobile number
       </Text>
-      <Text style={styles.subTitle}>******{userInfo.phone.slice(-4)}</Text>
+      <Text style={styles.subTitle}>******{signUpData.phone.slice(-4)}</Text>
 
       <View style={styles.otpInputContainer}>
         {[0, 1, 2, 3, 4, 5].map((index) => (

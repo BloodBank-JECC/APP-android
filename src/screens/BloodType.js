@@ -4,10 +4,31 @@ import { RadioButton } from "react-native-paper";
 import LottieView from "lottie-react-native";
 import BloodTypeSlector from "../components/BloodTypeSelector";
 import { useNavigation } from "@react-navigation/core";
+import ShowToast from "../components/Toast";
 
-export default function BloodType() {
+export default function BloodType({ route }) {
+  const { fillUserDetailsData } = route.params;
   const navigation = useNavigation();
-  const [checked, setChecked] = useState("first");
+  const [availability, setAvailability] = useState("Yes");
+  const [bloodType, setBloodType] = useState(null);
+
+  const handleData = (data) => {
+    setBloodType(data);
+  }
+
+  const handleSubmit = () => {
+    if (!bloodType) {
+      ShowToast("error","Please select your blood type");
+      return;
+    }
+    
+    const bloodTypeData = {
+      ...fillUserDetailsData,
+      availability,
+      bloodType,
+    };
+    navigation.navigate("SetPassword", { bloodTypeData });
+  };
 
   return (
     <View style={styles.container}>
@@ -19,25 +40,25 @@ export default function BloodType() {
       />
 
       <Text style={styles.title}>Pick your blood type</Text>
-      <BloodTypeSlector />
+      <BloodTypeSlector bloodType={handleData}/>
 
       <View style={{ marginVertical: 30 }}>
         <Text style={styles.title}>Are you willing to donate blood?</Text>
         <View style={styles.radioButtonAlignment}>
           <View style={styles.filterOptionConatiner}>
             <RadioButton
-              value="first"
-              status={checked === "first" ? "checked" : "unchecked"}
-              onPress={() => setChecked("first")}
+              value="Yes"
+              status={availability === "Yes" ? "checked" : "unchecked"}
+              onPress={() => setAvailability("Yes")}
               color="#e75f62"
             />
             <Text style={styles.radioButtonText}>Yes</Text>
           </View>
           <View style={styles.filterOptionConatiner}>
             <RadioButton
-              value="second"
-              status={checked === "second" ? "checked" : "unchecked"}
-              onPress={() => setChecked("second")}
+              value="Maybe"
+              status={availability === "Maybe" ? "checked" : "unchecked"}
+              onPress={() => setAvailability("Maybe")}
               color="#e75f62"
             />
             <Text style={styles.radioButtonText}>Maybe</Text>
@@ -46,7 +67,7 @@ export default function BloodType() {
       </View>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("SetPassword")}
+        onPress={handleSubmit}
         style={{ width: "100%" }}
       >
         <View style={styles.buttonConatiner}>

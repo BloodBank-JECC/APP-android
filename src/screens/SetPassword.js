@@ -4,14 +4,62 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
   StyleSheet,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
+import { useNavigation } from "@react-navigation/native";
+import database from "@react-native-firebase/database";
+import storage from "@react-native-firebase/storage";
+import ShowToast from "../components/Toast";
 
-export default function SetPassword() {
+export default function SetPassword({ route }) {
+  const { bloodTypeData } = route.params;
+  const navigation = useNavigation();
   const [password, setPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    if (password !== confirmPassword) {
+      ShowToast("error", "Passwords do not match!");
+      return;
+    }
+
+    if (password.length !== 8) {
+      ShowToast("error", "Password length should be minimum of 8");
+      return;
+    }
+
+    const finalData = {
+      ...bloodTypeData,
+      password,
+    };
+
+    const profileImagePath = `profile_images/${finalData.userId}`;
+    const imageRef = storage().ref(profileImagePath);
+
+    try {
+      setLoading(true);
+      const response = await fetch(finalData.profileImage);
+      const blob = await response.blob();
+      await imageRef.put(blob);
+      const profileImageUrl = await imageRef.getDownloadURL();
+      await database()
+        .ref(`users/${finalData.userId}`)
+        .set({
+          ...finalData,
+          profileImage: profileImageUrl,
+        });
+    } catch (error) {
+      console.error("Registration error:", error.message);
+      ShowToast("error","Error during registration");
+    } finally {
+      setLoading(false);
+      navigation.replace("Login");
+    }
+  };
 
   return (
     <View style={styles.conatiner}>
@@ -42,13 +90,18 @@ export default function SetPassword() {
         />
       </View>
       <TouchableOpacity
-        onPress={() => navigation.navigate("BloodType")}
+        onPress={handleSubmit}
         style={{ width: "100%", alignItems: "center" }}
       >
         <View style={styles.buttonConatiner}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </View>
       </TouchableOpacity>
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#e75f62" />
+        </View>
+      )}
     </View>
   );
 }
@@ -65,7 +118,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#333",
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 28,
     marginBottom: 20,
   },
@@ -94,5 +147,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "white",
     fontWeight: "500",
+  },
+  loadingContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
   },
 });

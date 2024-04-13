@@ -13,17 +13,15 @@ import ShowToast from "../components/Toast";
 
 export default function SignUp() {
   const navigation = useNavigation();
-  const [userInfo, setUserInfo] = useState({
-    email: null,
-    phone: null,
-  });
+  const [email, setEmail] = useState(null);
+  const [phone, setPhone] = useState(null);
 
   const verifyData = () => {
-    if (!userInfo.email && !userInfo.phone) return false;
+    if (!email && !phone) return false;
 
     // Verify email (jecc.ac.in only approved for now)
     const emailPattern = /^[a-zA-Z0-9._%+-]+@jecc\.ac\.in$/;
-    const isEmailValid = emailPattern.test(userInfo.email);
+    const isEmailValid = emailPattern.test(email);
     if (!isEmailValid) {
       ShowToast("error",
         "Please use email with the domain jecc.ac.in"
@@ -33,7 +31,7 @@ export default function SignUp() {
 
     // Verify phone
     const phonePattern = /^(?:\+?91)?[0-9]{10}$/;
-    const isPhoneValid = phonePattern.test(userInfo.phone);
+    const isPhoneValid = phonePattern.test(phone);
     if (!isPhoneValid) {
       ShowToast("error",
         "Please enter a valid 10-digit phone number."
@@ -45,7 +43,15 @@ export default function SignUp() {
 
   const handleSubmit = () => {
     if (!verifyData()) return;
-    navigation.navigate("OtpVerfiy", { userInfo });
+
+    const formattedPhone = phone.replace(/^0+|^\+91/g, "");
+    const userId = email.split("@")[0] + formattedPhone;
+    const signUpData = {
+      email,
+      phone: formattedPhone,
+      userId,
+    };
+    navigation.navigate("OtpVerfiy", { signUpData });
   };
 
   return (
@@ -61,9 +67,9 @@ export default function SignUp() {
         <View style={styles.textInputConatiner}>
           <Feather name="mail" size={25} />
           <TextInput
-            value={userInfo.email}
+            value={email}
             placeholder="Email"
-            onChangeText={(email) => setUserInfo({ ...userInfo, email: email })}
+            onChangeText={setEmail}
             style={styles.textInput}
           />
         </View>
@@ -71,9 +77,9 @@ export default function SignUp() {
         <View style={styles.textInputConatiner}>
           <Feather name="phone" size={25} />
           <TextInput
-            value={userInfo.phone}
+            value={phone}
             placeholder="Phone"
-            onChangeText={(phone) => setUserInfo({ ...userInfo, phone: phone })}
+            onChangeText={setPhone}
             style={styles.textInput}
           />
         </View>

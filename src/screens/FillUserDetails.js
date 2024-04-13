@@ -15,16 +15,21 @@ import { RadioButton } from "react-native-paper";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { useNavigation } from "@react-navigation/core";
+import ImagePickerGallery from "../utils/ImagePickerGallery";
+import ShowToast from "../components/Toast";
 
-export default function FillUserDetails() {
+export default function FillUserDetails({ route }) {
+  const { signUpData } = route.params;
   const navigation = useNavigation();
   const [name, setName] = useState(null);
   const [showDate, setShowDate] = useState(false);
   const [date, setDate] = useState(dayjs());
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState();
   const [gender, setGender] = useState("Male");
+  const [profileImage, setProfileImage] = useState(null);
 
   const locations = [
+    "Select location",
     "Thiruvananthapuram",
     "Kollam",
     "Pathanamthitta",
@@ -49,13 +54,51 @@ export default function FillUserDetails() {
     return `${day}/${month}/${year}`;
   };
 
+  const handleImagePicker = async () => {
+    const imageUri = await ImagePickerGallery();
+    setProfileImage(imageUri);
+  };
+
+  const handleSubmit = () => {
+    if (
+      name &&
+      formattedDate(date) !== formattedDate(dayjs()) &&
+      location &&
+      location !== "Select location"
+    ) {
+
+      if (!profileImage) {
+        ShowToast("error", "Please add a profile image");
+        return;
+      }
+
+      const fillUserDetailsData = {
+        ...signUpData,
+        name: name,
+        dob: formattedDate(date),
+        location: location,
+        gender: gender,
+        profileImage: profileImage,
+      };
+      navigation.navigate("BloodType", { fillUserDetailsData });
+    } else {
+      return;
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Complete your details</Text>
-      <Image
-        source={require("../../assets/nouser.png")}
-        style={styles.profileImg}
-      />
+      <TouchableOpacity onPress={handleImagePicker}>
+        {profileImage ? (
+          <Image source={{ uri: profileImage }} style={styles.profileImg} />
+        ) : (
+          <Image
+            source={require("../../assets/nouser.png")}
+            style={styles.profileImg}
+          />
+        )}
+      </TouchableOpacity>
       <View style={styles.inputContainer}>
         <Feather name="user" size={24} />
         <TextInput
@@ -151,7 +194,7 @@ export default function FillUserDetails() {
       </View>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("BloodType")}
+        onPress={handleSubmit}
         style={{ width: "100%", alignItems: "center" }}
       >
         <View style={styles.buttonConatiner}>

@@ -7,9 +7,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-export default function BloodTypeSlector() {
+export default function BloodTypeSlector({ bloodType }) {
   const [type, setType] = useState(null);
   const bloodTypes = ["O+", "A+", "B+", "AB+", "O-", "A-", "B-", "AB-"];
+
+  const handleData = (data) => {
+    setType(data);
+    bloodType(data);
+  };
 
   return (
     <View style={styles.container}>
@@ -21,9 +26,7 @@ export default function BloodTypeSlector() {
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
-              onPress={() => {
-                setType(item);
-              }}
+              onPress={() => handleData(item)}
             >
               <View
                 style={{
