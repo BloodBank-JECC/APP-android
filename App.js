@@ -1,6 +1,7 @@
 import { StyleSheet, View, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { UserProvider } from "./src/services/UserContext";
 import Toast from "react-native-toast-message";
 import Home from "./src/screens/Home";
 import FindDonor from "./src/screens/FindDonor";
@@ -17,57 +18,59 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <View style={styles.container}>
-        <StatusBar backgroundColor={"#fff"} barStyle="dark-content" />
-        <Stack.Navigator initialRouteName="Startup">
-          <Stack.Screen
-            name="Startup"
-            component={Startup}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SignUp"
-            component={SignUp}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="OtpVerfiy"
-            component={OtpVerfiy}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="FillUserDetails"
-            component={FillUserDetails}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="BloodType"
-            component={BloodType}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SetPassword"
-            component={SetPassword}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="FindDonor"
-            component={FindDonor}
-            options={{ title: "Pick your blood group" }}
-          />
-        </Stack.Navigator>
-        <Toast />
-      </View>
+      <UserProvider>
+        <View style={styles.container}>
+          <StatusBar backgroundColor={"#fff"} barStyle="dark-content" />
+          <Stack.Navigator initialRouteName="Startup">
+            <Stack.Screen
+              name="Startup"
+              component={Startup}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SignUp"
+              component={SignUp}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="OtpVerfiy"
+              component={OtpVerfiy}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="FillUserDetails"
+              component={FillUserDetails}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="BloodType"
+              component={BloodType}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SetPassword"
+              component={SetPassword}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="FindDonor"
+              component={FindDonor}
+              options={{ title: "Pick your blood group" }}
+            />
+          </Stack.Navigator>
+          <Toast />
+        </View>
+      </UserProvider>
     </NavigationContainer>
   );
 }
