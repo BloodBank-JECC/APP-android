@@ -7,14 +7,17 @@ import {
   Image,
   TextInput,
   StyleSheet,
+  ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
+import database from "@react-native-firebase/database";
 import ShowToast from "../components/Toast";
 
 export default function SignUp() {
   const navigation = useNavigation();
   const [email, setEmail] = useState(null);
   const [phone, setPhone] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const verifyData = () => {
     if (!email && !phone) return false;
@@ -23,9 +26,7 @@ export default function SignUp() {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@jecc\.ac\.in$/;
     const isEmailValid = emailPattern.test(email);
     if (!isEmailValid) {
-      ShowToast("error",
-        "Please use email with the domain jecc.ac.in"
-      );
+      ShowToast("error", "Please use email with the domain jecc.ac.in");
       return false;
     }
 
@@ -33,19 +34,29 @@ export default function SignUp() {
     const phonePattern = /^(?:\+?91)?[0-9]{10}$/;
     const isPhoneValid = phonePattern.test(phone);
     if (!isPhoneValid) {
-      ShowToast("error",
-        "Please enter a valid 10-digit phone number."
-      );
+      ShowToast("error", "Please enter a valid 10-digit phone number.");
       return false;
     }
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!verifyData()) return;
 
     const formattedPhone = phone.replace(/^0+|^\+91/g, "");
     const userId = email.split("@")[0] + formattedPhone;
+
+    setLoading(true);
+    const userExistsSnapshot = await database()
+      .ref(`users/${userId}`)
+      .once("value");
+
+    if (userExistsSnapshot.val()) {
+      ShowToast("error", "User with this email and phone already exists");
+      setLoading(false);
+      return;
+    }
+
     const signUpData = {
       email,
       phone: formattedPhone,
@@ -84,11 +95,19 @@ export default function SignUp() {
           />
         </View>
 
-        <TouchableOpacity onPress={handleSubmit} style={{ width: "100%" }}>
-          <View style={styles.buttonConatiner}>
-            <Text style={styles.text}>Continue</Text>
-          </View>
-        </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator
+            size={"large"}
+            color={"#e75f62"}
+            style={styles.loading}
+          />
+        ) : (
+          <TouchableOpacity onPress={handleSubmit} style={{ width: "100%" }}>
+            <View style={styles.buttonConatiner}>
+              <Text style={styles.text}>Continue</Text>
+            </View>
+          </TouchableOpacity>
+        )}
 
         <View style={{ flexDirection: "row", marginTop: 20 }}>
           <Text>Already have an account? </Text>
@@ -172,5 +191,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "white",
     fontWeight: "500",
+  },
+  loading: {
+    marginTop: 20,
   },
 });
