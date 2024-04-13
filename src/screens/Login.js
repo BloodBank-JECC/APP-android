@@ -7,15 +7,53 @@ import {
   Image,
   TextInput,
   StyleSheet,
+  ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
 import { RadioButton } from "react-native-paper";
+import database from "@react-native-firebase/database";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUser } from "../services/UserContext";
+import ShowToast from "../components/Toast";
 
 export default function Login() {
   const navigation = useNavigation();
+  const { setuser } = useUser();
   const [email, setEmail] = useState(null);
+  const [phone, setPhone] = useState(null);
   const [password, setPassword] = useState(null);
   const [remember, setRemember] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      if (email && phone && password) {
+        const formattedPhone = phone.replace(/^0+|^\+91/g, "");
+        const userId = email.split("@")[0] + formattedPhone;
+
+        // Check if the userID exists
+        const userDetailsSnapshot = await database()
+          .ref(`users/${userId}`)
+          .once("value");
+
+        const userDetails = userDetailsSnapshot.val();
+        if (userDetails && userDetails.password === password) {
+          // Save userId in AsyncStorage -token
+          await AsyncStorage.setItem("userId", userId);
+          setuser(userDetails);
+          navigation.replace("Home");
+        } else {
+          ShowToast("error", "Invalid email or password");
+        }
+      }
+    } catch (error) {
+      console.error("Login error:", error.message);
+      ShowToast("error", "Invalid email, mobile, or password");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -31,8 +69,18 @@ export default function Login() {
           <Fontisto name="email" size={25} />
           <TextInput
             value={email}
-            placeholder="Email "
+            placeholder="Email"
             onChangeText={setEmail}
+            style={styles.textInput}
+          />
+        </View>
+
+        <View style={styles.textInputConatiner}>
+          <Feather name="phone" size={25} />
+          <TextInput
+            value={phone}
+            placeholder="Phone"
+            onChangeText={setPhone}
             style={styles.textInput}
           />
         </View>
@@ -60,14 +108,19 @@ export default function Login() {
           <Text style={styles.optionText}>Forgot password?</Text>
         </View>
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
-          style={{ width: "100%" }}
-        >
-          <View style={styles.buttonConatiner}>
-            <Text style={styles.text}>Login</Text>
-          </View>
-        </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator
+            size={"large"}
+            color={"#e75f62"}
+            style={styles.loading}
+          />
+        ) : (
+          <TouchableOpacity onPress={handleLogin} style={{ width: "100%" }}>
+            <View style={styles.buttonConatiner}>
+              <Text style={styles.text}>Login</Text>
+            </View>
+          </TouchableOpacity>
+        )}
 
         <View style={{ flexDirection: "row", marginTop: 20 }}>
           <Text>Don't have an account? </Text>
@@ -152,4 +205,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "500",
   },
+  loading: {
+    marginTop: 20,
+  }
 });
