@@ -14,8 +14,13 @@ export default function Header() {
           <Text style={styles.locationText}>{user.location}</Text>
         </View>
       </View>
-      <FontAwesome name="bell" size={25} style={styles.icon} />
-      <Image source={{ uri: user.profileImage }} style={styles.profileImage} />
+      <View style={styles.icon}>
+        <FontAwesome name="bell" size={25} />
+        <Image
+          source={{ uri: user.profileImage }}
+          style={styles.profileImage}
+        />
+      </View>
     </View>
   );
 }
@@ -42,6 +47,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   icon: {
+    flexDirection: "row",
+    alignItems: "center",
     marginLeft: "auto",
   },
   profileImage: {
@@ -49,5 +56,5 @@ const styles = StyleSheet.create({
     width: 50,
     borderRadius: 25,
     marginLeft: 18,
-  }
+  },
 });
