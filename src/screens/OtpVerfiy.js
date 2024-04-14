@@ -22,8 +22,7 @@ export default function OtpVerfiy({ route }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    //signInwithPhoneNumber();
-    navigation.replace("FillUserDetails", {  signUpData });
+    signInwithPhoneNumber();
   }, []);
 
   const signInwithPhoneNumber = async () => {
