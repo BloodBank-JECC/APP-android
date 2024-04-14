@@ -46,7 +46,7 @@ export default function OtpVerfiy({ route }) {
     try {
       setLoading(true);
       await confirm.confirm(code);
-      navigation.replace("FillUserDetails");
+      navigation.replace("FillUserDetails", { signUpData });
     } catch (error) {
       ShowToast("error", "Invalid code.");
       console.error(error);

@@ -18,7 +18,7 @@ import ShowToast from "../components/Toast";
 
 export default function Login() {
   const navigation = useNavigation();
-  const { setuser } = useUser();
+  const { setUser } = useUser();
   const [email, setEmail] = useState(null);
   const [phone, setPhone] = useState(null);
   const [password, setPassword] = useState(null);
@@ -30,7 +30,8 @@ export default function Login() {
       setLoading(true);
       if (email && phone && password) {
         const formattedPhone = phone.replace(/^0+|^\+91/g, "");
-        const userId = email.split("@")[0] + formattedPhone;
+        const emailName = email.split("@")[0].replace(/[^a-zA-Z0-9]/g, "");
+        const userId = emailName + formattedPhone;
 
         // Check if the userID exists
         const userDetailsSnapshot = await database()
@@ -41,7 +42,7 @@ export default function Login() {
         if (userDetails && userDetails.password === password) {
           // Save userId in AsyncStorage -token
           await AsyncStorage.setItem("userId", userId);
-          setuser(userDetails);
+          setUser(userDetails);
           navigation.replace("Home");
         } else {
           ShowToast("error", "Invalid email or password");
@@ -208,5 +209,5 @@ const styles = StyleSheet.create({
   },
   loading: {
     marginTop: 20,
-  }
+  },
 });

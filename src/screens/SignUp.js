@@ -26,7 +26,7 @@ export default function SignUp() {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@jecc\.ac\.in$/;
     const isEmailValid = emailPattern.test(email);
     if (!isEmailValid) {
-      ShowToast("error", "Please use email with the domain jecc.ac.in");
+      ShowToast("error", "Please use email with domain jecc.ac.in");
       return false;
     }
 
@@ -44,7 +44,8 @@ export default function SignUp() {
     if (!verifyData()) return;
 
     const formattedPhone = phone.replace(/^0+|^\+91/g, "");
-    const userId = email.split("@")[0] + formattedPhone;
+    const emailName = email.split("@")[0].replace(/[^a-zA-Z0-9]/g, "");
+    const userId = emailName + formattedPhone;
 
     setLoading(true);
     const userExistsSnapshot = await database()

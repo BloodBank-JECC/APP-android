@@ -22,13 +22,14 @@ export default function DonorList() {
   const { bloodType } = useApp();
   const { user } = useUser();
   const [donors, setDonors] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     findDonor();
   }, [bloodType]);
 
   const findDonor = async () => {
+    setLoading(true);
     const usersRef = database().ref("users/");
 
     const usersQuery = query(
