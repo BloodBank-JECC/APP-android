@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,14 +6,20 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
+import { useApp } from "../services/AppContext";
 
-export default function BloodTypeSlector({ bloodType }) {
+export default function BloodTypeSlector() {
   const [type, setType] = useState(null);
+  const { setBloodType } = useApp();
   const bloodTypes = ["O+", "A+", "B+", "AB+", "O-", "A-", "B-", "AB-"];
+
+  useEffect(() => {
+    setBloodType(null);
+  }, []);
 
   const handleData = (data) => {
     setType(data);
-    bloodType(data);
+    setBloodType(data);
   };
 
   return (

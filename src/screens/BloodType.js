@@ -5,16 +5,13 @@ import LottieView from "lottie-react-native";
 import BloodTypeSlector from "../components/BloodTypeSelector";
 import { useNavigation } from "@react-navigation/core";
 import ShowToast from "../components/Toast";
+import { useApp } from "../services/AppContext";
 
 export default function BloodType({ route }) {
   const { fillUserDetailsData } = route.params;
+  const { bloodType } = useApp();
   const navigation = useNavigation();
   const [availability, setAvailability] = useState("Yes");
-  const [bloodType, setBloodType] = useState(null);
-
-  const handleData = (data) => {
-    setBloodType(data);
-  }
 
   const handleSubmit = () => {
     if (!bloodType) {
@@ -40,7 +37,7 @@ export default function BloodType({ route }) {
       />
 
       <Text style={styles.title}>Pick your blood type</Text>
-      <BloodTypeSlector bloodType={handleData}/>
+      <BloodTypeSlector />
 
       <View style={{ marginVertical: 30 }}>
         <Text style={styles.title}>Are you willing to donate blood?</Text>
