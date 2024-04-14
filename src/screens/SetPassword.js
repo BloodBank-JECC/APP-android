@@ -74,6 +74,7 @@ export default function SetPassword({ route }) {
         <Feather name="lock" size={24} />
         <TextInput
           value={password}
+          secureTextEntry
           onChangeText={setPassword}
           style={styles.input}
           placeholder="Password"
@@ -84,6 +85,7 @@ export default function SetPassword({ route }) {
         <Feather name="lock" size={24} />
         <TextInput
           value={confirmPassword}
+          secureTextEntry
           onChangeText={setConfirmPassword}
           style={styles.input}
           placeholder="Confirm password"

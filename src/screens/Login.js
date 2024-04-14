@@ -89,6 +89,7 @@ export default function Login() {
           <Feather name="lock" size={25} />
           <TextInput
             value={password}
+            secureTextEntry
             placeholder="Password"
             onChangeText={setPassword}
             style={styles.textInput}
