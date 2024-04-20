@@ -19,7 +19,17 @@ export default function Startup() {
 
   useEffect(() => {
     checkLoggedInStatus();
+    reset();
   }, []);
+
+  const reset = async () => {
+    const currDate = new Date().toDateString();
+    const lastResetDate = await AsyncStorage.getItem("lastResetDate");
+    if (lastResetDate !== currDate) {
+      await AsyncStorage.setItem("lastResetDate", currDate);
+      await AsyncStorage.removeItem("requestedDonors");
+    }
+  };
 
   const checkLoggedInStatus = async () => {
     try {
