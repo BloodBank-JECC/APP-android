@@ -16,17 +16,43 @@ import database, {
   endAt,
   onValue,
 } from "@react-native-firebase/database";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import { useApp } from "../services/AppContext";
+import ShowToast from "../components/Toast";
 
 export default function DonorList() {
   const { bloodType } = useApp();
   const { user } = useUser();
   const [donors, setDonors] = useState([]);
+  const [requestedDonors, setRequestedDonors] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [requestLoading, setRequestLoading] = useState(false);
 
   useEffect(() => {
     findDonor();
+    loadPreviousReq();
   }, [bloodType]);
+
+  useEffect(() => {
+    saveRequests();
+  }, [requestedDonors]);
+
+  const saveRequests = async () => {
+    await AsyncStorage.setItem(
+      "requestedDonors",
+      JSON.stringify(requestedDonors)
+    );
+  }
+
+  const loadPreviousReq = async () => {
+    await AsyncStorage.getItem("requestedDonors").then((data) => {
+      if (data) {
+        const parsedData = JSON.parse(data);
+        setRequestedDonors(parsedData);
+      }
+    });
+  };
 
   const findDonor = async () => {
     setLoading(true);
@@ -43,6 +69,9 @@ export default function DonorList() {
       if (snapshot.exists()) {
         const usersData = snapshot.val();
         const usersArray = Object.values(usersData);
+        for (const user of usersArray) {
+          user.requestLoading = false;
+        }
         setDonors(usersArray);
       } else {
         setDonors([]);
@@ -56,8 +85,53 @@ export default function DonorList() {
     };
   };
 
-  const handleRequest = () => {
-    // request msg to be made
+  const handleRequest = async (userId, item, index) => {
+    try {
+      item.requestLoading = true;
+      setRequestLoading(true);
+
+      const fcmBackendToken = await AsyncStorage.getItem("fcmBackendToken");
+      const tokenSnapshot = await database()
+        .ref(`users/${userId}/fcmToken`)
+        .once("value");
+      const recipientToken = tokenSnapshot.val();
+
+      if (!recipientToken || !fcmBackendToken) {
+        throw new Error("Token not found");
+      }
+
+      const message = {
+        targetToken: recipientToken,
+        title: "New blood request",
+        body: `${user.name} requesting blood from you`,
+        senderId: `${user.userId}`,
+        userId: `${userId}`,
+      };
+
+      const res = await axios.post(
+        `${process.env.EXPO_PUBLIC_FCM_SEND_URL}/sendNotification`,
+        message,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${fcmBackendToken}`,
+          },
+        }
+      );
+
+      if (res.status !== 200) {
+        throw new Error("FCM send service responded code: ", res.status);
+      }
+
+      setRequestedDonors((prevDonors) => [...prevDonors, item.userId]);
+      ShowToast("success", "Request sent successfully");
+    } catch (error) {
+      ShowToast("error", "Request failed to send!");
+      console.error("Error sending notification:", error);
+    } finally {
+      item.requestLoading = false;
+      setRequestLoading(false);
+    }
   };
 
   const renderDonorCard = ({ item, index }) => (
@@ -73,14 +147,26 @@ export default function DonorList() {
           <Text style={styles.profileSubText}>{item.location}</Text>
         </View>
       </View>
-      <TouchableOpacity
-        onPress={() => handleRequest(item.userId)}
-        style={{ marginLeft: "auto" }}
-      >
+      {requestedDonors.includes(item.userId) ? (
         <View style={styles.requestConatiner}>
-          <Text>Request</Text>
+          <Text>Requested</Text>
         </View>
-      </TouchableOpacity>
+      ) : item.requestLoading ? (
+        <ActivityIndicator
+          size={"small"}
+          color={"#e75f62"}
+          style={{ marginLeft: "auto", marginRight: 10 }}
+        />
+      ) : (
+        <TouchableOpacity
+          onPress={() => handleRequest(item.userId, item, index)}
+          style={{ marginLeft: "auto" }}
+        >
+          <View style={styles.requestConatiner}>
+            <Text>Request</Text>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 

@@ -27,7 +27,7 @@ export default function SetPassword({ route }) {
       return;
     }
 
-    if (password.length !== 8) {
+    if (password.length < 8) {
       ShowToast("error", "Password length should be minimum of 8");
       return;
     }
@@ -46,11 +46,13 @@ export default function SetPassword({ route }) {
       const blob = await response.blob();
       await imageRef.put(blob);
       const profileImageUrl = await imageRef.getDownloadURL();
+      const fcmToken = await messaging().getToken();
       await database()
         .ref(`users/${finalData.userId}`)
         .set({
           ...finalData,
           profileImage: profileImageUrl,
+          fcmToken,
         });
     } catch (error) {
       console.error("Registration error:", error.message);

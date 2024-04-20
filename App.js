@@ -1,6 +1,7 @@
 import { StyleSheet, View, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useEffect } from "react";
 import { UserProvider } from "./src/services/UserContext";
 import { AppProvider } from "./src/services/AppContext";
 import Toast from "react-native-toast-message";
@@ -14,10 +15,16 @@ import OtpVerfiy from "./src/screens/OtpVerfiy";
 import FillUserDetails from "./src/screens/FillUserDetails";
 import SetPassword from "./src/screens/SetPassword";
 import DonorList from "./src/screens/DonorList";
+import NotificationService from "./src/services/NotificationService";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+
+  useEffect(() => {
+    NotificationService();
+  }, [])
+
   return (
     <NavigationContainer>
       <UserProvider>

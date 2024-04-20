@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import { RadioButton } from "react-native-paper";
 import database from "@react-native-firebase/database";
+import messaging from "@react-native-firebase/messaging";
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUser } from "../services/UserContext";
 import ShowToast from "../components/Toast";
@@ -42,6 +44,30 @@ export default function Login() {
         if (userDetails && userDetails.password === password) {
           // Save userId in AsyncStorage -token
           await AsyncStorage.setItem("userId", userId);
+
+          // Update the user's fcmToken for every login
+          const fcmToken = await messaging().getToken();
+          if (!fcmToken) throw new Error("fcmToken not found!");
+          await database().ref(`users/${userId}`).update({
+            fcmToken,
+          });
+
+          // Generate fcmBackendToken
+          const fcmBackendRes = await axios.post(
+            `${process.env.EXPO_PUBLIC_FCM_SEND_URL}/genToken`,
+            {
+              userId,
+              username: userDetails.name,
+              password: userDetails.password,
+            }
+          );
+
+          if (fcmBackendRes.status !== 200) {
+            throw new Error("fcmBackend genToken responded code: ", fcmBackendRes.code);
+          }
+          const fcmBackendToken = fcmBackendRes.data.token;
+          await AsyncStorage.setItem("fcmBackendToken", fcmBackendToken);
+
           setUser(userDetails);
           navigation.replace("Home");
         } else {
@@ -50,7 +76,7 @@ export default function Login() {
       }
     } catch (error) {
       console.error("Login error:", error.message);
-      ShowToast("error", "Invalid email, mobile, or password");
+      ShowToast("error", "Something went wrong, please try again later");
     } finally {
       setLoading(false);
     }
