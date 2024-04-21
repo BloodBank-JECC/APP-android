@@ -90,6 +90,12 @@ export default function DonorList() {
       item.requestLoading = true;
       setRequestLoading(true);
 
+      let currCount = Number(await AsyncStorage.getItem("reqCount"));
+      if (currCount >= 5){
+        ShowToast("error", "Daily limit reached. Try again tomorrow.")
+        return;
+      }
+
       const fcmBackendToken = await AsyncStorage.getItem("fcmBackendToken");
       const tokenSnapshot = await database()
         .ref(`users/${userId}/fcmToken`)
@@ -124,7 +130,8 @@ export default function DonorList() {
       }
 
       setRequestedDonors((prevDonors) => [...prevDonors, item.userId]);
-      ShowToast("success", "Request sent successfully");
+      await AsyncStorage.setItem("reqCount", (++currCount).toString());
+      ShowToast("success", `Request sent successfully (${currCount}/5)`);
     } catch (error) {
       ShowToast("error", "Request failed to send!");
       console.error("Error sending notification:", error);

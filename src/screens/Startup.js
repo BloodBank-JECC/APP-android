@@ -28,6 +28,7 @@ export default function Startup() {
     if (lastResetDate !== currDate) {
       await AsyncStorage.setItem("lastResetDate", currDate);
       await AsyncStorage.removeItem("requestedDonors");
+      await AsyncStorage.setItem("reqCount", (0).toString());
     }
   };
 
