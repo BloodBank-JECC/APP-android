@@ -43,7 +43,7 @@ export default function DonorList() {
       "requestedDonors",
       JSON.stringify(requestedDonors)
     );
-  }
+  };
 
   const loadPreviousReq = async () => {
     await AsyncStorage.getItem("requestedDonors").then((data) => {
@@ -91,8 +91,8 @@ export default function DonorList() {
       setRequestLoading(true);
 
       let currCount = Number(await AsyncStorage.getItem("reqCount"));
-      if (currCount >= 5){
-        ShowToast("error", "Daily limit reached. Try again tomorrow.")
+      if (currCount >= 5) {
+        ShowToast("error", "Daily limit reached. Try again tomorrow.");
         return;
       }
 
@@ -108,8 +108,8 @@ export default function DonorList() {
 
       const message = {
         targetToken: recipientToken,
-        title: "New blood request",
-        body: `${user.name} requesting blood from you`,
+        title: "Blood Donation Request",
+        body: `Help needed! ${user.name} has requested blood donation. Your donation can save a life. Click to make a difference.`,
         senderId: `${user.userId}`,
         userId: `${userId}`,
       };
