@@ -6,28 +6,29 @@ const NotificationService = async () => {
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
   messaging().onMessage(async (remoteMessage) => {
-    const { notification } = remoteMessage;
-    console.log("Received Notification (Foreground):", notification);
-
-    saveNotificationToDatabase(notification);
+    const { notification, data } = remoteMessage;
+    saveNotificationToDatabase(notification, data);
   });
 
   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-    const { notification } = remoteMessage;
-    console.log("Received Notification (Background):", notification);
-
-    saveNotificationToDatabase(notification);
+    const { notification, data } = remoteMessage;
+    saveNotificationToDatabase(notification, data);
   });
 };
 
-const saveNotificationToDatabase = (notification) => {
-  database().ref("notifications").push().set({
-    title: notification.title,
-    message: notification.body,
-    userId: notification.userId,
-    senderId: notification.senderId,
-    timestamp: Date.now(),
-  });
+const saveNotificationToDatabase = async (notification, data) => {
+  try {
+    await database().ref("notifications").push().set({
+      title: notification.title,
+      message: notification.body,
+      userId: data.userId,
+      senderId: data.senderId,
+      profileImage: data.profileImage,
+      timestamp: Date.now(),
+    });
+  } catch (error) {
+    console.error("Failed to save notification to database ", error);
+  }
 };
 
 export default NotificationService;
