@@ -16,6 +16,7 @@ import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { useNavigation } from "@react-navigation/core";
 import ImagePickerGallery from "../utils/ImagePickerGallery";
+import { locations } from "../utils/Constants";
 import ShowToast from "../components/Toast";
 
 export default function FillUserDetails({ route }) {
@@ -27,24 +28,6 @@ export default function FillUserDetails({ route }) {
   const [location, setLocation] = useState();
   const [gender, setGender] = useState("Male");
   const [profileImage, setProfileImage] = useState(null);
-
-  const locations = [
-    "Select location",
-    "Thiruvananthapuram",
-    "Kollam",
-    "Pathanamthitta",
-    "Alappuzha",
-    "Kottayam",
-    "Idukki",
-    "Ernakulam",
-    "Thrissur",
-    "Palakkad",
-    "Malappuram",
-    "Kozhikode",
-    "Wayanad",
-    "Kannur",
-    "Kasaragod",
-  ];
 
   const formattedDate = (date) => {
     const dateObj = new Date(date);
@@ -64,9 +47,8 @@ export default function FillUserDetails({ route }) {
       name &&
       formattedDate(date) !== formattedDate(dayjs()) &&
       location &&
-      location !== "Select location"
+      location !== "Select Location"
     ) {
-
       if (!profileImage) {
         ShowToast("error", "Please add a profile image");
         return;
@@ -164,8 +146,8 @@ export default function FillUserDetails({ route }) {
           onValueChange={(itemValue) => setLocation(itemValue)}
           style={{ width: "95%" }}
         >
-          {locations.map((option) => (
-            <Picker.Item label={option} value={option} />
+          {locations.map((option, index) => (
+            <Picker.Item label={option} value={option} key={index.toString()} />
           ))}
         </Picker>
       </View>

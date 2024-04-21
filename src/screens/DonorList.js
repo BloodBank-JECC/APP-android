@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useApp } from "../services/AppContext";
 import ShowToast from "../components/Toast";
+import DonorSort from "../components/DonorSort";
 
 export default function DonorList() {
   const { bloodType } = useApp();
@@ -28,11 +29,13 @@ export default function DonorList() {
   const [requestedDonors, setRequestedDonors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
+  const [locationFilter, setLocationFilter] = useState("");
+  const [departmentFilter, setDepartmentFilter] = useState("");
 
   useEffect(() => {
     findDonor();
     loadPreviousReq();
-  }, [bloodType]);
+  }, [bloodType, locationFilter, departmentFilter]);
 
   useEffect(() => {
     saveRequests();
@@ -52,6 +55,37 @@ export default function DonorList() {
         setRequestedDonors(parsedData);
       }
     });
+  };
+
+  const handleLocationData = (data) => {
+    if (data === "Select Location") {
+      setLocationFilter("");
+    } else {
+      setLocationFilter(data);
+    }
+  };
+
+  const handleDepartmentData = (data) => {
+    if (data === "Select Department") {
+      setDepartmentFilter("");
+    } else {
+      setDepartmentFilter(data);
+    }
+  };
+
+  const filterDonors = (donors) => {
+    let filteredDonors = [...donors];
+    if (locationFilter) {
+      filteredDonors = filteredDonors.filter(
+        (donor) => donor.location === locationFilter
+      );
+    }
+    if (departmentFilter) {
+      filteredDonors = filteredDonors.filter(
+        (donor) => donor.department === departmentFilter
+      );
+    }
+    return filteredDonors;
   };
 
   const findDonor = async () => {
@@ -85,8 +119,11 @@ export default function DonorList() {
     };
   };
 
-  const handleRequest = async (userId, item, index) => {
+  const handleRequest = async (userId, item) => {
     try {
+      if (item.requestLoading) {
+        return;
+      }
       item.requestLoading = true;
       setRequestLoading(true);
 
@@ -109,9 +146,10 @@ export default function DonorList() {
       const message = {
         targetToken: recipientToken,
         title: "Blood Donation Request",
-        body: `Help needed! ${user.name} has requested blood donation. Your donation can save a life. Click to make a difference.`,
+        body: `🚨 Urgent: ${user.name} seeks your support. Tap to help save a life.`,
         senderId: `${user.userId}`,
         userId: `${userId}`,
+        profileImage: `${user.profileImage}`,
       };
 
       const res = await axios.post(
@@ -166,7 +204,7 @@ export default function DonorList() {
         />
       ) : (
         <TouchableOpacity
-          onPress={() => handleRequest(item.userId, item, index)}
+          onPress={() => handleRequest(item.userId, item)}
           style={{ marginLeft: "auto" }}
         >
           <View style={styles.requestConatiner}>
@@ -179,6 +217,10 @@ export default function DonorList() {
 
   return (
     <View style={styles.container}>
+      <DonorSort
+        locationData={(data) => handleLocationData(data)}
+        departmentData={(data) => handleDepartmentData(data)}
+      />
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size={"large"} color={"#e75f62"} />
@@ -191,7 +233,7 @@ export default function DonorList() {
         </View>
       ) : (
         <FlatList
-          data={donors}
+          data={filterDonors(donors)}
           renderItem={renderDonorCard}
           keyExtractor={(item, index) => index.toString()}
         />
