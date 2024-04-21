@@ -25,10 +25,8 @@ const ImagePickerGallery = async () => {
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     allowsEditing: true,
     aspect: [1, 1],
-    quality: 0.5,
+    quality: 0.2,
   });
-
-  console.log("result: " + result.assets[0].uri);
 
   if (!result.canceled) {
     const fileSize = await getFileSize(result.assets[0].uri);
