@@ -15,6 +15,7 @@ import OtpVerfiy from "./src/screens/OtpVerfiy";
 import FillUserDetails from "./src/screens/FillUserDetails";
 import SetPassword from "./src/screens/SetPassword";
 import DonorList from "./src/screens/DonorList";
+import Notifications from "./src/screens/Notifications";
 import NotificationService from "./src/services/NotificationService";
 
 const Stack = createNativeStackNavigator();
@@ -82,6 +83,7 @@ export default function App() {
                 component={DonorList}
                 options={{ title: "Find Donor" }}
               />
+              <Stack.Screen name="Notifications" component={Notifications} />
             </Stack.Navigator>
             <Toast />
           </View>
