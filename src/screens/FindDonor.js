@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import BloodTypeSlector from "../components/BloodTypeSelector";
-import FilterOptions from "../components/FilterOptions";
 import DonorList from "./DonorList";
 import { useApp } from "../services/AppContext";
 
@@ -12,8 +11,6 @@ export default function FindDonor() {
   return (
     <View style={styles.container}>
       <BloodTypeSlector />
-      <FilterOptions />
-
       <View style={styles.donorListHeader}>
         <Text style={styles.title}>Available Donor</Text>
         <TouchableOpacity
