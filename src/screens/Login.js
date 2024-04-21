@@ -69,7 +69,10 @@ export default function Login() {
           await AsyncStorage.setItem("fcmBackendToken", fcmBackendToken);
 
           setUser(userDetails);
-          navigation.replace("Home");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Home" }],
+          });
         } else {
           ShowToast("error", "Invalid email or password");
         }

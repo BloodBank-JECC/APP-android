@@ -54,12 +54,17 @@ export default function SetPassword({ route }) {
           profileImage: profileImageUrl,
           fcmToken,
         });
+
+      ShowToast("success", "Registration successful");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
     } catch (error) {
       console.error("Registration error:", error.message);
-      ShowToast("error","Error during registration");
+      ShowToast("error", "Error during registration");
     } finally {
       setLoading(false);
-      navigation.replace("Login");
     }
   };
 
