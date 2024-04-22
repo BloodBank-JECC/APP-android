@@ -16,7 +16,7 @@ import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { useNavigation } from "@react-navigation/core";
 import ImagePickerGallery from "../utils/ImagePickerGallery";
-import { locations } from "../utils/Constants";
+import { locations, departments } from "../utils/Constants";
 import ShowToast from "../components/Toast";
 
 export default function FillUserDetails({ route }) {
@@ -26,6 +26,7 @@ export default function FillUserDetails({ route }) {
   const [showDate, setShowDate] = useState(false);
   const [date, setDate] = useState(dayjs());
   const [location, setLocation] = useState();
+  const [department, setDepartment] = useState();
   const [gender, setGender] = useState("Male");
   const [profileImage, setProfileImage] = useState(null);
 
@@ -47,7 +48,8 @@ export default function FillUserDetails({ route }) {
       name &&
       formattedDate(date) !== formattedDate(dayjs()) &&
       location &&
-      location !== "Select Location"
+      location !== "Select Location" &&
+      department !== "Select Department"
     ) {
       if (!profileImage) {
         ShowToast("error", "Please add a profile image");
@@ -59,6 +61,7 @@ export default function FillUserDetails({ route }) {
         name: name,
         dob: formattedDate(date),
         location: location,
+        department: department,
         gender: gender,
         profileImage: profileImage,
       };
@@ -152,7 +155,20 @@ export default function FillUserDetails({ route }) {
         </Picker>
       </View>
 
-      <View style={{ marginVertical: 10, width: "100%" }}>
+      <View style={styles.inputContainer}>
+        <Ionicons name="git-branch-outline" size={28} />
+        <Picker
+          selectedValue={department}
+          onValueChange={(itemValue) => setDepartment(itemValue)}
+          style={{ width: "95%" }}
+        >
+          {departments.map((option, index) => (
+            <Picker.Item label={option} value={option} key={index.toString()} />
+          ))}
+        </Picker>
+      </View>
+
+      <View style={{ marginVertical: 5, width: "100%" }}>
         <View style={styles.radioButtonAlignment}>
           <View style={styles.filterOptionConatiner}>
             <RadioButton
@@ -197,15 +213,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "600",
-    marginVertical: 40,
+    marginVertical: 30,
   },
   lottie: {
     width: "100%",
     height: "40%",
   },
   profileImg: {
-    width: 120,
-    height: 120,
+    width: 110,
+    height: 110,
     borderRadius: 60,
     borderWidth: 2,
     borderColor: "#e75f62",
@@ -216,7 +232,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderRadius: 5,
-    marginVertical: 20,
+    marginVertical: 15,
     alignItems: "center",
   },
   input: {
@@ -246,7 +262,7 @@ const styles = StyleSheet.create({
   buttonConatiner: {
     width: "80%",
     padding: 15,
-    marginTop: 20,
+    marginTop: 10,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#e75f62",
