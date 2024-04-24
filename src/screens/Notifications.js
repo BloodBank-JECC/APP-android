@@ -108,6 +108,7 @@ const Notifications = () => {
           data={notifications}
           renderItem={renderNotificationItem}
           keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{ paddingRight: 10 }}
         />
       )}
       <Modal
@@ -132,6 +133,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+    paddingRight: -10,
   },
   notificationBoxContainer: {
     flexDirection: "row",

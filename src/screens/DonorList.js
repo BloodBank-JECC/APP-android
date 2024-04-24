@@ -96,7 +96,6 @@ export default function DonorList() {
     }
     return filteredDonors;
   };
-  
 
   const findDonor = async () => {
     setLoading(true);
@@ -247,6 +246,7 @@ export default function DonorList() {
           data={filterDonors(donors)}
           renderItem={renderDonorCard}
           keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{ paddingRight: 10 }}
         />
       )}
     </View>
@@ -257,6 +257,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+    paddingRight: -10,
   },
   loadingContainer: {
     flex: 1,
