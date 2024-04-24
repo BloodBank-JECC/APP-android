@@ -10,7 +10,6 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
-import { RadioButton } from "react-native-paper";
 import database from "@react-native-firebase/database";
 import messaging from "@react-native-firebase/messaging";
 import axios from "axios";
@@ -24,7 +23,6 @@ export default function Login() {
   const [email, setEmail] = useState(null);
   const [phone, setPhone] = useState(null);
   const [password, setPassword] = useState(null);
-  const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -126,18 +124,7 @@ export default function Login() {
           />
         </View>
 
-        <View style={styles.optionConatiner}>
-          <View style={styles.radioConatiner}>
-            <RadioButton
-              value="remember"
-              status={remember ? "checked" : "unchecked"}
-              onPress={() => setRemember(!remember)}
-              color="#e75f62"
-            />
-            <Text style={styles.optionText}>Remember me</Text>
-          </View>
-          <Text style={styles.optionText}>Forgot password?</Text>
-        </View>
+        <Text style={styles.forgotPassText}>Forgot password?</Text>
 
         {loading ? (
           <ActivityIndicator
@@ -207,18 +194,8 @@ const styles = StyleSheet.create({
     width: "100%",
     marginLeft: 10,
   },
-  optionConatiner: {
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
-    marginVertical: 10,
-    width: "100%",
-  },
-  radioConatiner: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  optionText: {
+  forgotPassText: {
+    padding: 10,
     fontSize: 13,
     fontWeight: "400",
   },

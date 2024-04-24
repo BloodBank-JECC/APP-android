@@ -164,21 +164,6 @@ const styles = StyleSheet.create({
     width: "100%",
     marginLeft: 10,
   },
-  optionConatiner: {
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
-    marginVertical: 10,
-    width: "100%",
-  },
-  radioConatiner: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  optionText: {
-    fontSize: 13,
-    fontWeight: "400",
-  },
   buttonConatiner: {
     width: "100%",
     padding: 15,
