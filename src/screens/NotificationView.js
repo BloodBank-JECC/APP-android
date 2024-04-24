@@ -22,6 +22,8 @@ export default function NotificationView({ sender }) {
   const [requestLoading, setRequestLoading] = useState(false);
   const [showCall, setShowCall] = useState(false);
   const [showRejectMsg, setShowRejectMsg] = useState(false);
+  const [alreadyDonated, setAlreadyDonated] = useState(false);
+  const [daysUntilCanDonate, setDaysUntilCanDonate] = useState(null);
 
   useEffect(() => {
     findSenderData();
@@ -58,6 +60,19 @@ export default function NotificationView({ sender }) {
   const handleConfirmation = async (userId, status) => {
     try {
       setRequestLoading(true);
+
+      const lastDonatedTimestamp = user.lastDonated || 0;
+      const threeMonthsAgo = Date.now() - 3 * 30 * 24 * 60 * 60 * 1000; // 3 months in milliseconds
+
+      if (lastDonatedTimestamp >= threeMonthsAgo) {
+        const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+        const daysCount = Math.ceil(
+          (threeMonthsAgo - lastDonatedTimestamp) / millisecondsPerDay
+        );
+        setDaysUntilCanDonate(daysCount);
+        setAlreadyDonated(true);
+        return;
+      }
 
       const fcmBackendToken = await AsyncStorage.getItem("fcmBackendToken");
       const tokenSnapshot = await database()
@@ -104,6 +119,9 @@ export default function NotificationView({ sender }) {
         throw new Error("FCM send service responded code: ", res.status);
       }
 
+      await database().ref(`users/${user.userId}`).update({
+        lastDonated: Date.now(),
+      });
       setConfirmation(status ? "accepted" : "rejected");
     } catch (error) {
       ShowToast("error", "Request failed to send!");
@@ -137,6 +155,13 @@ export default function NotificationView({ sender }) {
             <View style={styles.requestLoading}>
               <ActivityIndicator size="large" color="#e75f62" />
             </View>
+          ) : alreadyDonated ? (
+            <View style={styles.errorMsgContainer}>
+              <Text style={styles.errorText}>
+                You can donate blood again after {daysUntilCanDonate} days.
+                Thank you for your willingness to donate and save lives!
+              </Text>
+            </View>
           ) : showCall ? (
             <TouchableOpacity
               onPress={() => handleCall()}
@@ -144,7 +169,7 @@ export default function NotificationView({ sender }) {
             >
               <View
                 style={{
-                  ...styles.confirmationConatiner,
+                  ...styles.confirmationContainer,
                   backgroundColor: "#5dbea3",
                 }}
               >
@@ -152,8 +177,8 @@ export default function NotificationView({ sender }) {
               </View>
             </TouchableOpacity>
           ) : showRejectMsg ? (
-            <View style={styles.rejectionContainer}>
-              <Text style={styles.rejectionText}>
+            <View style={styles.errorMsgContainer}>
+              <Text style={styles.errorText}>
                 Unfortunately, {senderData.name} is unable to support your blood
                 donation request at this time. Keep reaching out for help!
               </Text>
@@ -161,14 +186,14 @@ export default function NotificationView({ sender }) {
           ) : confirmation === "accepted" ? (
             <View
               style={{
-                ...styles.confirmationConatiner,
+                ...styles.confirmationContainer,
                 backgroundColor: "#5dbea3",
               }}
             >
               <Text style={styles.buttonText}>Accepted</Text>
             </View>
           ) : confirmation === "rejected" ? (
-            <View style={styles.confirmationConatiner}>
+            <View style={styles.confirmationContainer}>
               <Text style={styles.buttonText}>Rejected</Text>
             </View>
           ) : (
@@ -176,7 +201,7 @@ export default function NotificationView({ sender }) {
               <TouchableOpacity
                 onPress={() => handleConfirmation(sender.senderId, false)}
               >
-                <View style={styles.buttonConatiner}>
+                <View style={styles.buttonContainer}>
                   <Text style={styles.buttonText}>Reject</Text>
                 </View>
               </TouchableOpacity>
@@ -186,7 +211,7 @@ export default function NotificationView({ sender }) {
               >
                 <View
                   style={{
-                    ...styles.buttonConatiner,
+                    ...styles.buttonContainer,
                     backgroundColor: "#5dbea3",
                   }}
                 >
@@ -232,7 +257,7 @@ const styles = StyleSheet.create({
     width: "75%",
     justifyContent: "space-between",
   },
-  buttonConatiner: {
+  buttonContainer: {
     width: 110,
     padding: 15,
     marginTop: 15,
@@ -241,7 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e75f62",
     borderRadius: 10,
   },
-  confirmationConatiner: {
+  confirmationContainer: {
     width: "80%",
     padding: 15,
     marginTop: 15,
@@ -272,7 +297,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  rejectionContainer: {
+  errorMsgContainer: {
     width: "85%",
     padding: 15,
     marginTop: 15,
@@ -281,7 +306,7 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     borderRadius: 10,
   },
-  rejectionText: {
+  errorText: {
     fontSize: 12,
     color: "white",
     fontWeight: "500",

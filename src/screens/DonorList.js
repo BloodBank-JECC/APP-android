@@ -74,7 +74,16 @@ export default function DonorList() {
   };
 
   const filterDonors = (donors) => {
-    let filteredDonors = [...donors];
+    let filteredDonors = donors.filter((donor) => {
+      if (donor.userId === user.userId) {
+        return false;
+      }
+      // Check if the donor has donated in the last 3 months
+      const lastDonatedTimestamp = donor.lastDonated || 0;
+      const threeMonthsAgo = Date.now() - 3 * 30 * 24 * 60 * 60 * 1000; // 3 months in milliseconds
+      return lastDonatedTimestamp < threeMonthsAgo;
+    });
+
     if (locationFilter) {
       filteredDonors = filteredDonors.filter(
         (donor) => donor.location === locationFilter
@@ -87,6 +96,7 @@ export default function DonorList() {
     }
     return filteredDonors;
   };
+  
 
   const findDonor = async () => {
     setLoading(true);
