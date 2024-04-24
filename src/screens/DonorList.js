@@ -150,6 +150,7 @@ export default function DonorList() {
         senderId: `${user.userId}`,
         userId: `${userId}`,
         profileImage: `${user.profileImage}`,
+        confirmation: "",
       };
 
       const res = await axios.post(

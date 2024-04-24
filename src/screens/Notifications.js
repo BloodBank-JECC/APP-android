@@ -4,16 +4,22 @@ import {
   Text,
   FlatList,
   Image,
+  Modal,
   ActivityIndicator,
+  TouchableOpacity,
   StyleSheet,
 } from "react-native";
 import database from "@react-native-firebase/database";
 import { useUser } from "../services/UserContext";
+import { Ionicons } from "@expo/vector-icons";
+import NotificationView from "./NotificationView";
 
 const Notifications = () => {
   const { user } = useUser();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [viewNotification, setViewNotification] = useState(false);
+  const [senderData, setSenderData] = useState();
 
   useEffect(() => {
     fetchNotifications();
@@ -33,9 +39,9 @@ const Notifications = () => {
         .once("value");
       if (snapshot.exists()) {
         const notificationsData = snapshot.val();
-        const filteredNotifications = Object.values(notificationsData).filter(
-          (notification) => notification.userId === user.userId
-        );
+        const filteredNotifications = Object.values(notificationsData)
+          .filter((notification) => notification.userId === user.userId)
+          .sort((a, b) => b.timestamp - a.timestamp);
         setNotifications(filteredNotifications);
       }
     } catch (error) {
@@ -63,19 +69,26 @@ const Notifications = () => {
     }
   };
 
+  const handleNotification = (item) => {
+    setViewNotification(true);
+    setSenderData(item);
+  };
+
   const renderNotificationItem = ({ item }) => (
-    <View style={styles.notificationBoxContainer}>
-      <Image source={{ uri: item.profileImage }} style={styles.image} />
-      <View style={styles.notificationItem}>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.time}>{notificationTime(item.timestamp)}</Text>
+    <TouchableOpacity onPress={() => handleNotification(item)}>
+      <View style={styles.notificationBoxContainer}>
+        <Image source={{ uri: item.profileImage }} style={styles.image} />
+        <View style={styles.notificationItem}>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.time}>{notificationTime(item.timestamp)}</Text>
+          </View>
+          <Text numberOfLines={3} ellipsizeMode="tail">
+            {item.message}
+          </Text>
         </View>
-        <Text numberOfLines={2} ellipsizeMode="tail">
-          {item.message}
-        </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -97,6 +110,20 @@ const Notifications = () => {
           keyExtractor={(item, index) => index.toString()}
         />
       )}
+      <Modal
+        visible={viewNotification}
+        animationType="slide"
+        transparent={true}
+      >
+        <View style={styles.blurBackground} />
+        <NotificationView sender={senderData} />
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => setViewNotification(false)}
+        >
+          <Ionicons name="close" size={30} color="#fff" />
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };
@@ -146,6 +173,22 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#555",
     textAlign: "center",
+  },
+  blurBackground: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 20,
+    padding: 10,
   },
 });
 
