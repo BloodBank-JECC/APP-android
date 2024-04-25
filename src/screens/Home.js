@@ -2,6 +2,15 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import Header from "../components/Header";
 import Banner from "../components/Banner";
 import { useNavigation } from "@react-navigation/core";
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+} from "react-native-google-mobile-ads";
+
+const adUnitId = __DEV__
+  ? TestIds.ADAPTIVE_BANNER
+  : "ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy";
 
 export default function Home() {
   const navigation = useNavigation();
@@ -40,6 +49,10 @@ export default function Home() {
           </TouchableOpacity>
         </View>
       </View>
+      <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
     </View>
   );
 }
