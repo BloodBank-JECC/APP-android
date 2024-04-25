@@ -10,15 +10,36 @@ export default function Home() {
     <View style={styles.conatiner}>
       <Header />
       <Banner />
-      <TouchableOpacity onPress={() => navigation.navigate("FindDonor")}>
-        <View style={styles.optionConatiner}>
-          <Image
-            source={require("../../assets/find-blood.png")}
-            style={styles.optionImg}
-          />
-          <Text style={styles.optionText}>Find Blood</Text>
+      <View style={styles.optionsContainer}>
+        <View style={{ width: "50%" }}>
+          <View style={styles.contactConatiner}>
+            <Image
+              source={require("../../assets/contact.png")}
+              style={styles.contactImg}
+            />
+            <Text style={styles.optionText}>Contact</Text>
+          </View>
+          <View style={styles.aboutContainer}>
+            <Image
+              source={require("../../assets/about.png")}
+              style={styles.aboutImg}
+            />
+            <Text style={styles.optionText}>About</Text>
+          </View>
         </View>
-      </TouchableOpacity>
+
+        <View style={{ width: "50%" }}>
+          <TouchableOpacity onPress={() => navigation.navigate("FindDonor")}>
+            <View style={styles.findBloodConatiner}>
+              <Image
+                source={require("../../assets/find-blood.png")}
+                style={styles.bloodImg}
+              />
+              <Text style={styles.optionText}>Find Blood</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
@@ -29,24 +50,55 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 20,
   },
-  optionConatiner: {
-    width: "100%",
-    height: 70,
+  optionsContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F5D7DC",
-    elevation: 1,
-    borderRadius: 10,
-    alignItems: "center",
-    padding: 10,
+    flex: 1,
+    justifyContent: "space-between",
   },
-  optionImg: {
-    width: 40,
-    height: 40,
+  contactImg: {
+    width: 60,
+    height: 60,
+  },
+  aboutImg: {
+    width: 60,
+    height: 60,
+  },
+  bloodImg: {
+    width: 120,
+    height: 120,
   },
   optionText: {
-    fontWeight: "500",
-    fontSize: 18,
-    marginLeft: 15,
+    fontWeight: "600",
+    fontSize: 22,
+    marginLeft: 0,
+    color: "white",
+  },
+  aboutContainer: {
+    width: "90%",
+    height: "30%",
+    backgroundColor: "#e75f62",
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 1,
+  },
+  contactConatiner: {
+    width: "90%",
+    height: "30%",
+    backgroundColor: "#e75f62",
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 1,
+    marginBottom: "10%",
+  },
+  findBloodConatiner: {
+    marginTop: "0%",
+    width: "100%",
+    height: "80%",
+    backgroundColor: "#e75f62",
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
