@@ -3,6 +3,7 @@ import {
   Text,
   Image,
   FlatList,
+  Alert,
   ActivityIndicator,
   TouchableOpacity,
   StyleSheet,
@@ -21,6 +22,7 @@ import axios from "axios";
 import { useApp } from "../services/AppContext";
 import ShowToast from "../components/Toast";
 import DonorSort from "../components/DonorSort";
+import RewardAd from "../services/RewardAd";
 
 export default function DonorList() {
   const { bloodType } = useApp();
@@ -31,6 +33,7 @@ export default function DonorList() {
   const [requestLoading, setRequestLoading] = useState(false);
   const [locationFilter, setLocationFilter] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("");
+  const [showAd, setShowAd] = useState(false);
 
   useEffect(() => {
     findDonor();
@@ -128,6 +131,35 @@ export default function DonorList() {
     };
   };
 
+  const handleWatchAd = () => {
+    setShowAd(true);
+  };
+  
+  const handleRewardEarned = async (amount) => {
+    setShowAd(false);
+    if (amount === 10) {
+      await AsyncStorage.setItem("reqCount", (5).toString());
+    }
+  };
+
+  const showDailyLimitAlert = () => {
+    Alert.alert(
+      'Request Limit Reached',
+      'Your request limit is reached. Would you like to watch an ad to get more requests?',
+      [
+        {
+          text: 'Close',
+          style: 'cancel',
+        },
+        {
+          text: 'Watch Ad',
+          onPress: () => handleWatchAd(),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const handleRequest = async (userId, item) => {
     try {
       if (item.requestLoading) {
@@ -139,6 +171,7 @@ export default function DonorList() {
       let currCount = Number(await AsyncStorage.getItem("reqCount"));
       if (currCount >= 5) {
         ShowToast("error", "Daily limit reached. Try again tomorrow.");
+        showDailyLimitAlert();
         return;
       }
 
@@ -191,6 +224,7 @@ export default function DonorList() {
 
   const renderDonorCard = ({ item, index }) => (
     <View style={styles.profileConatiner}>
+      {showAd && <RewardAd onRewardEarned={handleRewardEarned} />}
       <Image
         source={{ uri: item.profileImage || "./../../assets/nouser.png" }}
         style={styles.profileImage}
