@@ -207,7 +207,7 @@ export default function NotificationView({ sender }) {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => handleConfirmation(sender.userId, true)}
+                onPress={() => handleConfirmation(sender.senderId, true)}
               >
                 <View
                   style={{
