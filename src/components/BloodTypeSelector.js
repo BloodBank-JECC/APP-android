@@ -60,6 +60,7 @@ export default function BloodTypeSlector() {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
+    alignItems: "center",
   },
   optionConatiner: {
     padding: 10,

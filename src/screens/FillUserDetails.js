@@ -131,7 +131,7 @@ export default function FillUserDetails({ route }) {
             style={{
               width: "100%",
               alignItems: "center",
-              marginTop: -30,
+              marginTop: -20,
               marginBottom: 20,
             }}
           >
@@ -143,11 +143,11 @@ export default function FillUserDetails({ route }) {
       </Modal>
 
       <View style={styles.inputContainer}>
-        <Ionicons name="location-outline" size={28} />
+        <Ionicons name="location-outline" size={25} />
         <Picker
           selectedValue={location}
           onValueChange={(itemValue) => setLocation(itemValue)}
-          style={{ width: "95%" }}
+          style={{ width: "100%", marginLeft: -10 }}
         >
           {locations.map((option, index) => (
             <Picker.Item label={option} value={option} key={index.toString()} />
@@ -156,11 +156,11 @@ export default function FillUserDetails({ route }) {
       </View>
 
       <View style={styles.inputContainer}>
-        <Ionicons name="git-branch-outline" size={28} />
+        <Ionicons name="git-branch-outline" size={24} />
         <Picker
           selectedValue={department}
           onValueChange={(itemValue) => setDepartment(itemValue)}
-          style={{ width: "95%" }}
+          style={{ width: "100%", marginLeft: -10 }}
         >
           {departments.map((option, index) => (
             <Picker.Item label={option} value={option} key={index.toString()} />
@@ -228,6 +228,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
+    height: 55,
     width: "90%",
     padding: 10,
     borderWidth: 1,
@@ -236,7 +237,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    marginLeft: 10,
+    marginLeft: 12,
     width: "100%",
   },
   datePicker: {
@@ -246,10 +247,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: "center",
     position: "absolute",
-    top: "20%",
-    height: "50%",
+    top: "auto",
+    bottom: "20%",
+    height: "55%",
     width: "85%",
-    margin: 20,
+    padding: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
