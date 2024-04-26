@@ -46,13 +46,11 @@ export default function SetPassword({ route }) {
       const blob = await response.blob();
       await imageRef.put(blob);
       const profileImageUrl = await imageRef.getDownloadURL();
-      const fcmToken = await messaging().getToken();
       await database()
         .ref(`users/${finalData.userId}`)
         .set({
           ...finalData,
           profileImage: profileImageUrl,
-          fcmToken,
         });
 
       ShowToast("success", "Registration successful");
