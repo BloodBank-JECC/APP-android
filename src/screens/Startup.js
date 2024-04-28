@@ -1,26 +1,34 @@
 import {
   View,
   Text,
-  TouchableOpacity,
+  StatusBar,
+  Image,
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
-import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/core";
 import { useState, useEffect } from "react";
 import database from "@react-native-firebase/database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUser } from "../services/UserContext";
+import { quotes } from "../utils/Constants";
 
 export default function Startup() {
   const navigation = useNavigation();
   const { setUser } = useUser();
   const [loading, setLoading] = useState(true);
+  const [quote, setQuote] = useState("");
 
   useEffect(() => {
+    fetchQuote();
     checkLoggedInStatus();
     reset();
   }, []);
+
+  const fetchQuote = async () => {
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    setQuote(quotes[randomIndex]);
+  };
 
   const reset = async () => {
     const currDate = new Date().toDateString();
@@ -44,6 +52,8 @@ export default function Startup() {
         if (userDetails) {
           setUser(userDetails);
           navigation.replace("Home");
+        } else {
+          navigation.navigate("Login")
         }
       }
     } catch (error) {
@@ -55,32 +65,18 @@ export default function Startup() {
 
   return (
     <View style={styles.conatiner}>
-      <LottieView
-        source={require("../../assets/lottie-initial.json")}
-        autoPlay
-        loop
-        style={styles.lottie}
+      <StatusBar backgroundColor={"#e75f62"} barStyle="light-content" />
+      <Image
+        source={require("./../../assets/banner-white.png")}
+        style={styles.banner}
       />
-
-      {loading ? (
+      <Text style={styles.quote}>"{quote}"</Text>
+      {loading && (
         <ActivityIndicator
           size={"large"}
-          color={"#e75f62"}
+          color={"white"}
           style={styles.loading}
         />
-      ) : (
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Login")}
-          style={{
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <View style={styles.buttonConatiner}>
-            <Text style={styles.text}>Let's Go</Text>
-          </View>
-        </TouchableOpacity>
       )}
     </View>
   );
@@ -92,26 +88,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-  },
-  lottie: {
-    width: "90%",
-    aspectRatio: 1,
-  },
-  buttonConatiner: {
-    width: "90%",
-    padding: 15,
-    marginTop: 50,
-    alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#e75f62",
-    borderRadius: 10,
   },
-  text: {
-    fontSize: 18,
+  banner: {
+    width: "100%",
+    height: 200,
+    resizeMode: "contain",
+    marginBottom: 5,
+  },
+  quote: {
+    fontSize: 22,
     color: "white",
-    fontWeight: "500",
+    fontStyle: 'italic',
+    textAlign: "center",
   },
   loading: {
-    marginTop: 50,
+    marginTop: "30%",
   },
 });
