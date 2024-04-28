@@ -8,9 +8,7 @@ import {
   TestIds,
 } from "react-native-google-mobile-ads";
 
-const adUnitId = __DEV__
-  ? TestIds.ADAPTIVE_BANNER
-  : "ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy";
+const adUnitId = TestIds.ADAPTIVE_BANNER;
 
 export default function Home() {
   const navigation = useNavigation();
