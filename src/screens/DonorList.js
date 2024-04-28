@@ -23,6 +23,7 @@ import { useApp } from "../services/AppContext";
 import ShowToast from "../components/Toast";
 import DonorSort from "../components/DonorSort";
 import RewardAd from "../services/RewardAd";
+import FastImage from "react-native-fast-image";
 
 export default function DonorList() {
   const { bloodType } = useApp();
@@ -134,25 +135,25 @@ export default function DonorList() {
   const handleWatchAd = () => {
     setShowAd(true);
   };
-  
+
   const handleRewardEarned = async (amount) => {
     setShowAd(false);
     if (amount === 10) {
-      await AsyncStorage.setItem("reqCount", (5).toString());
+      await AsyncStorage.setItem("reqCount", (0).toString());
     }
   };
 
   const showDailyLimitAlert = () => {
     Alert.alert(
-      'Request Limit Reached',
-      'Your request limit is reached. Would you like to watch an ad to get more requests?',
+      "Request Limit Reached",
+      "Your request limit is reached. Would you like to watch an ad to get more requests?",
       [
         {
-          text: 'Close',
-          style: 'cancel',
+          text: "Close",
+          style: "cancel",
         },
         {
-          text: 'Watch Ad',
+          text: "Watch Ad",
           onPress: () => handleWatchAd(),
         },
       ],
@@ -225,8 +226,9 @@ export default function DonorList() {
   const renderDonorCard = ({ item, index }) => (
     <View style={styles.profileConatiner}>
       {showAd && <RewardAd onRewardEarned={handleRewardEarned} />}
-      <Image
-        source={{ uri: item.profileImage || "./../../assets/nouser.png" }}
+      <FastImage
+        source={{ uri: item.profileImage }}
+        defaultSource={require("./../../assets/nouser.png")}
         style={styles.profileImage}
       />
       <View style={{ marginLeft: 15 }}>

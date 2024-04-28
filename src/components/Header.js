@@ -1,25 +1,31 @@
-import { View, Text, Image, StyleSheet } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/core";
+import { FontAwesome6 } from "@expo/vector-icons";
+import FastImage from "react-native-fast-image";
 import { useUser } from "../services/UserContext";
 
 export default function Header() {
+  const navigation = useNavigation();
   const { user } = useUser();
 
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.welcomeText}>Hello, {user.name}</Text>
+        <Text style={styles.welcomeText}>{user.name}</Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={styles.greenLight} />
           <Text style={styles.locationText}>{user.location}</Text>
         </View>
       </View>
       <View style={styles.icon}>
-        <FontAwesome name="bell" size={25} />
-        <Image
-          source={{ uri: user.profileImage }}
-          style={styles.profileImage}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
+          <FontAwesome6 name="bell" size={30} />
+        </TouchableOpacity>
+          <FastImage
+            source={{ uri: user.profileImage }}
+            defaultSource={require("./../../assets/nouser.png")}
+            style={styles.profileImage}
+          />
       </View>
     </View>
   );

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   FlatList,
-  Image,
   Modal,
   ActivityIndicator,
   TouchableOpacity,
@@ -13,6 +12,7 @@ import database from "@react-native-firebase/database";
 import { useUser } from "../services/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 import NotificationView from "./NotificationView";
+import FastImage from "react-native-fast-image";
 
 const Notifications = () => {
   const { user } = useUser();
@@ -77,7 +77,11 @@ const Notifications = () => {
   const renderNotificationItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleNotification(item)}>
       <View style={styles.notificationBoxContainer}>
-        <Image source={{ uri: item.profileImage }} style={styles.image} />
+        <FastImage
+          source={{ uri: item.profileImage }}
+          defaultSource={require("./../../assets/nouser.png")}
+          style={styles.image}
+        />
         <View style={styles.notificationItem}>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.title}>{item.title}</Text>
