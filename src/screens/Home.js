@@ -19,13 +19,18 @@ export default function Home() {
       <Banner />
       <View style={styles.optionsContainer}>
         <View style={{ width: "50%" }}>
-          <View style={styles.contactConatiner}>
-            <Image
-              source={require("../../assets/contact.png")}
-              style={styles.contactImg}
-            />
-            <Text style={styles.optionText}>Contact</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Contact")}
+            style={{ width: "90%", height: "30%", marginBottom: "10%"}}
+          >
+            <View style={styles.contactConatiner}>
+              <Image
+                source={require("../../assets/contact.png")}
+                style={styles.contactImg}
+              />
+              <Text style={styles.optionText}>Contact</Text>
+            </View>
+          </TouchableOpacity>
           <View style={styles.aboutContainer}>
             <Image
               source={require("../../assets/about.png")}
@@ -94,14 +99,12 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   contactConatiner: {
-    width: "90%",
-    height: "30%",
+    width: "100%",
+    height: "100%",
     backgroundColor: "#e75f62",
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 1,
-    marginBottom: "10%",
   },
   findBloodConatiner: {
     marginTop: "0%",

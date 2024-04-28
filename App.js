@@ -17,6 +17,7 @@ import SetPassword from "./src/screens/SetPassword";
 import DonorList from "./src/screens/DonorList";
 import Notifications from "./src/screens/Notifications";
 import NotificationService from "./src/services/NotificationService";
+import Contact from "./src/screens/Contact";
 
 const Stack = createNativeStackNavigator();
 
@@ -84,6 +85,7 @@ export default function App() {
                 options={{ title: "Find Donor" }}
               />
               <Stack.Screen name="Notifications" component={Notifications} />
+              <Stack.Screen name="Contact" component={Contact} />
             </Stack.Navigator>
             <Toast />
           </View>
