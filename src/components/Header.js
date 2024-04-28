@@ -21,11 +21,13 @@ export default function Header() {
         <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
           <FontAwesome6 name="bell" size={30} />
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
           <FastImage
             source={{ uri: user.profileImage }}
             defaultSource={require("./../../assets/nouser.png")}
             style={styles.profileImage}
           />
+          </TouchableOpacity>
       </View>
     </View>
   );

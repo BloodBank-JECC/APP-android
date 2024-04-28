@@ -18,6 +18,7 @@ import DonorList from "./src/screens/DonorList";
 import Notifications from "./src/screens/Notifications";
 import NotificationService from "./src/services/NotificationService";
 import Contact from "./src/screens/Contact";
+import Profile from "./src/screens/Profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -86,6 +87,7 @@ export default function App() {
               />
               <Stack.Screen name="Notifications" component={Notifications} />
               <Stack.Screen name="Contact" component={Contact} />
+              <Stack.Screen name="Profile" component={Profile} />
             </Stack.Navigator>
             <Toast />
           </View>
