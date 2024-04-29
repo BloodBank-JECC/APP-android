@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   ActivityIndicator,
   Linking,
@@ -11,6 +10,7 @@ import {
 import database from "@react-native-firebase/database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import FastImage from "react-native-fast-image";
 import ShowToast from "../components/Toast";
 import { useUser } from "../services/UserContext";
 
@@ -141,7 +141,11 @@ export default function NotificationView({ sender }) {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: sender.profileImage }} style={styles.image} />
+      <FastImage
+        source={{ uri: sender.profileImage }}
+        defaultSource={require("./../../assets/nouser.png")}
+        style={styles.image}
+      />
       {senderData && (
         <>
           <Text style={styles.name}>{senderData.name}</Text>
