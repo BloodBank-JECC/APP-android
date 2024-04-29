@@ -21,7 +21,7 @@ export default function Home() {
         <View style={{ width: "50%" }}>
           <TouchableOpacity
             onPress={() => navigation.navigate("Contact")}
-            style={{ width: "90%", height: "30%", marginBottom: "10%"}}
+            style={{ width: "90%", height: "30%", marginBottom: "10%" }}
           >
             <View style={styles.contactConatiner}>
               <Image
@@ -31,17 +31,25 @@ export default function Home() {
               <Text style={styles.optionText}>Contact</Text>
             </View>
           </TouchableOpacity>
-          <View style={styles.aboutContainer}>
-            <Image
-              source={require("../../assets/about.png")}
-              style={styles.aboutImg}
-            />
-            <Text style={styles.optionText}>About</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AboutApp")}
+            style={{ width: "90%", height: "30%" }}
+          >
+            <View style={styles.aboutContainer}>
+              <Image
+                source={require("../../assets/about.png")}
+                style={styles.aboutImg}
+              />
+              <Text style={styles.optionText}>About</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <View style={{ width: "50%" }}>
-          <TouchableOpacity onPress={() => navigation.navigate("FindDonor")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("FindDonor")}
+            style={{ width: "100%", height: "65%" }}
+          >
             <View style={styles.findBloodConatiner}>
               <Image
                 source={require("../../assets/find-blood.png")}
@@ -90,13 +98,12 @@ const styles = StyleSheet.create({
     color: "white",
   },
   aboutContainer: {
-    width: "90%",
-    height: "30%",
+    width: "100%",
+    height: "100%",
     backgroundColor: "#e75f62",
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 1,
   },
   contactConatiner: {
     width: "100%",
@@ -107,9 +114,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   findBloodConatiner: {
-    marginTop: "0%",
     width: "100%",
-    height: "80%",
+    height: "100%",
     backgroundColor: "#e75f62",
     borderRadius: 30,
     alignItems: "center",
