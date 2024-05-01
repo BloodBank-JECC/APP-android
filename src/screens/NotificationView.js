@@ -15,7 +15,7 @@ import ShowToast from "../components/Toast";
 import { useUser } from "../services/UserContext";
 
 export default function NotificationView({ sender }) {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const [senderData, setSenderData] = useState();
   const [loading, setLoading] = useState(false);
   const [confirmation, setConfirmation] = useState("");
@@ -67,7 +67,7 @@ export default function NotificationView({ sender }) {
       if (lastDonatedTimestamp >= threeMonthsAgo) {
         const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
         const daysCount = Math.ceil(
-          (threeMonthsAgo - lastDonatedTimestamp) / millisecondsPerDay
+          (lastDonatedTimestamp - threeMonthsAgo) / millisecondsPerDay
         );
         setDaysUntilCanDonate(daysCount);
         setAlreadyDonated(true);
@@ -119,10 +119,23 @@ export default function NotificationView({ sender }) {
         throw new Error("FCM send service responded code: ", res.status);
       }
 
-      await database().ref(`users/${user.userId}`).update({
-        lastDonated: Date.now(),
-      });
-      setConfirmation(status ? "accepted" : "rejected");
+      if (status) {
+        const totalDonations = user.totalDonations
+          ? user.totalDonations + 1
+          : 1;
+        await database().ref(`users/${user.userId}`).update({
+          lastDonated: Date.now(),
+          totalDonations: totalDonations,
+        });
+        setUser((prevUser) => ({
+          ...prevUser,
+          lastDonated: Date.now(),
+          totalDonations: totalDonations,
+        }));
+        setConfirmation("accepted");
+      } else {
+        setConfirmation("rejected");
+      }
     } catch (error) {
       ShowToast("error", "Request failed to send!");
       console.error("Error sending notification:", error);
