@@ -21,8 +21,8 @@ export default function Startup() {
 
   useEffect(() => {
     fetchQuote();
-    checkLoggedInStatus();
     reset();
+    checkLoggedInStatus();
   }, []);
 
   const fetchQuote = async () => {
@@ -52,9 +52,9 @@ export default function Startup() {
         if (userDetails) {
           setUser(userDetails);
           navigation.replace("Home");
-        } else {
-          navigation.navigate("Login")
         }
+      } else {
+        navigation.navigate("Login");
       }
     } catch (error) {
       console.error("Error checking login status:", error.message);
@@ -70,7 +70,7 @@ export default function Startup() {
         source={require("./../../assets/banner-white.png")}
         style={styles.banner}
       />
-      <Text style={styles.quote}>"{quote}"</Text>
+      <Text numberOfLines={2} style={styles.quote}>"{quote}"</Text>
       {loading && (
         <ActivityIndicator
           size={"large"}
