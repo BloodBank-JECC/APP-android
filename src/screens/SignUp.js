@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   StyleSheet,
+  StatusBar,
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
@@ -68,6 +69,7 @@ export default function SignUp() {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={"white"} barStyle="dark-content" />
       <Image
         source={require("../../assets/donation-banner.png")}
         style={styles.image}
