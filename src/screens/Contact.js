@@ -79,6 +79,7 @@ export default function Contact() {
         </View>
         <TextInput
           placeholder="Your Message"
+          value={message}
           onChangeText={setMessage}
           style={styles.messageInput}
           multiline
