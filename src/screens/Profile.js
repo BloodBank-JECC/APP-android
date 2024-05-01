@@ -26,7 +26,7 @@ export default function Profile() {
     }
     const date = new Date(user.lastDonated);
     return date.toLocaleDateString();
-  }
+  };
 
   const daysLeft = () => {
     if (!user.lastDonated) {
@@ -36,7 +36,7 @@ export default function Profile() {
     const threeMonthsAgo = Date.now() - 3 * 30 * 24 * 60 * 60 * 1000; // 3 months in milliseconds
     const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
     const daysCount = Math.ceil(
-      (threeMonthsAgo - lastDonatedTimestamp) / millisecondsPerDay
+      (lastDonatedTimestamp - threeMonthsAgo) / millisecondsPerDay
     );
     return daysCount;
   };
@@ -77,16 +77,19 @@ export default function Profile() {
             <Text style={styles.optionValue}>{user.totalDonations || 0}</Text>
           </View>
           <View style={styles.separator}></View>
-          <View style={{ marginLeft: 5, justifyContent: "space-evenly" }}>
+          <View style={{ justifyContent: "space-evenly" }}>
             <Text style={styles.optionTitle}>Last Donated</Text>
             <Text style={styles.optionValue}>{formatedDate()}</Text>
           </View>
         </View>
-        <View style={styles.detailContainer}>
-          <Text style={{ fontSize: 35, color: "white", fontWeight: "500" }}>
+        <View style={styles.dayCountContainer}>
+          <Text style={{ color: "white" }}>Next after</Text>
+          <Text style={{ fontSize: 35, color: "white", fontWeight: "500", marginTop: "-10%"}}>
             {daysLeft()}
           </Text>
-          <Text style={{ color: "white", fontSize: 18 }}>days</Text>
+          <Text style={{ color: "white", fontSize: 18, marginTop: "-10%" }}>
+            days
+          </Text>
         </View>
       </View>
       <TouchableOpacity
@@ -104,22 +107,20 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: "10%",
-    padding: 10,
+    marginTop: "5%",
+    padding: 5,
   },
   profileImage: {
-    width: 130,
-    height: 130,
+    width: 100,
+    height: 100,
     borderRadius: 100,
     borderWidth: 2,
     borderColor: "red",
     marginBottom: -1,
   },
   title: {
-    marginTop: 8,
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: "500",
-    color: "red",
   },
   greenLight: {
     width: 12,
@@ -146,12 +147,14 @@ const styles = StyleSheet.create({
   optionsSubContainer: {
     flexDirection: "row",
     alignItems: "center",
-    width: "75%",
+    width: "80%",
     height: "80%",
     borderRadius: 10,
     borderColor: "gray",
     marginBottom: 40,
-    padding: 10,
+    padding: 12,
+    paddingRight: 15,
+    marginRight: 10,
     alignItems: "column",
     backgroundColor: "white",
     zIndex: -1,
@@ -171,14 +174,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     height: "100%",
     borderWidth: 1,
+    backgroundColor: "gray",
     borderColor: "gray",
   },
-  detailContainer: {
+  dayCountContainer: {
     width: 100,
     height: 100,
-    marginLeft: "-10%",
+    marginLeft: "-15%",
     marginTop: -10,
-    backgroundColor: "red",
+    backgroundColor: "#e75f62",
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",

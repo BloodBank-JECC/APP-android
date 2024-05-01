@@ -1,52 +1,43 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React from "react";
+import { ScrollView, Text, Image, StyleSheet } from "react-native";
 
 const AboutApp = () => {
   return (
-    <View style={styles.container}>
-        <Image source={require("./../../assets/banner.png")} style={styles.image}/>
+    <ScrollView style={styles.container}>
+      <Image
+        source={require("./../../assets/banner.png")}
+        style={styles.image}
+      />
       <Text style={styles.heading}>About Blood Bank App</Text>
       <Text style={styles.description}>
-        Welcome to the Blood Bank App! An app designed exclusively for the students of Jyothi Engineering College to connect blood donors with recipients in need. Our mission is to make blood donation easier and more accessible for everyone.
+        Welcome to the Blood Bank App! An app designed exclusively for the
+        students of Jyothi Engineering College to connect blood donors with
+        recipients in need. Our mission is to make blood donation easier and
+        more accessible for everyone.
       </Text>
       <Text style={styles.subHeading}>Features:</Text>
       <Text style={styles.feature}>
         - Search for blood donors in your college
       </Text>
-      <Text style={styles.feature}>
-        - Register as a blood donor
-      </Text>
-      <Text style={styles.feature}>
-        - Request blood donation when in need
-      </Text>
+      <Text style={styles.feature}>- Register as a blood donor</Text>
+      <Text style={styles.feature}>- Request blood donation when in need</Text>
       <Text style={styles.feature}>
         - Get notified about donors in your reach
       </Text>
-      <Text style={styles.feature}>
-        - View your donation history
-      </Text>
+      <Text style={styles.feature}>- View your donation history</Text>
       <Text style={styles.subHeading}>Developers:</Text>
-      <Text style={styles.feature}>
-           Abhiram T K
-      </Text>
-      <Text style={styles.feature}>
-        Abhishek P S 
-      </Text>
-      <Text style={styles.feature}>
-        Anakha A
-      </Text>
-      <Text style={styles.feature}>
-        Fathimathul Thabshira P J
-      </Text>
-    </View>
+      <Text style={styles.feature}>Abhiram T K</Text>
+      <Text style={styles.feature}>Abhishek P S</Text>
+      <Text style={styles.feature}>Anakha A</Text>
+      <Text style={styles.feature}>Fathimathul Thabshira P J</Text>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    padding: 10,
   },
   image: {
     width: "100%",
@@ -56,7 +47,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   description: {
@@ -65,7 +56,7 @@ const styles = StyleSheet.create({
   },
   subHeading: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
     marginTop: 10,
   },
